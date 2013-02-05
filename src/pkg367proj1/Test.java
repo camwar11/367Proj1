@@ -26,12 +26,14 @@ public class Test {
             
             @Override
             public void reshape( GLAutoDrawable glautodrawable, int x, int y, int width, int height ) {
-                OneTriangle.setup( glautodrawable.getGL().getGL2(), width, height );
+                Cake.setup( glautodrawable.getGL().getGL2(), width, height );
             }
             
             @Override
             public void init( GLAutoDrawable glautodrawable ) {
+                Cake.init(glautodrawable.getGL().getGL2());
             }
+            
             
             @Override
             public void dispose( GLAutoDrawable glautodrawable ) {
@@ -39,7 +41,7 @@ public class Test {
             
             @Override
             public void display( GLAutoDrawable glautodrawable ) {
-                OneTriangle.render( glautodrawable.getGL().getGL2(), glautodrawable.getWidth(), glautodrawable.getHeight() );
+                Cake.render( glautodrawable.getGL().getGL2());
             }
         });
 
