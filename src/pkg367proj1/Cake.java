@@ -10,36 +10,30 @@ import javax.media.opengl.glu.GLU;
 
 public class Cake {
     static int list;
-    static int liSphere,liCyl;
+    static int liSphere,liCake, liCandle;
     protected static void setup( GL2 gl2, int width, int height ) {
         gl2.glViewport( 0, 0, width, height );
         gl2.glMatrixMode( GL2.GL_PROJECTION );
         gl2.glLoadIdentity();
         GLU glu = new GLU();
-        //glu.gluPerspective(60f, width/height, 1, 50);
-        gl2.glOrtho( -10, 10, -10, 10, -10, 10 );
-        glu.gluLookAt(4, 1, 0, 0, 0, 2, 0, 0, 1);
+        glu.gluPerspective(90f, width/(float)height, 5, 50);
+        //gl2.glOrtho( -10, 10, -10, 10, -10, 10 );
+        
+        //glu.gluPerspective(60f, width/height, 1, 20);
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
-        gl2.glLoadIdentity();        
+        gl2.glLoadIdentity();
+        //glu.gluLookAt(10, 0, 5, 0, 0, 0, 0, 0, 1);
+        glu.gluLookAt(  15, 0, 15,  //eye position x,y,z
+                        0,  0, 0,   //focus x,y,z
+                        0,  0, 1  );//camera up x,y,z
+                
     }
     protected static void init(GL2 gl2){
         initSphere(gl2, 2f);
-        initCylinder(gl2, 4f, 4f);
-    }
-    protected static void initTriangle(GL2 gl, int width, int height){
-        list = gl.glGenLists(1);
-        gl.glNewList(list, GL2.GL_COMPILE);
-        // draw a triangle filling the window
-        gl.glLoadIdentity();
-        gl.glBegin( GL.GL_TRIANGLES );
-        gl.glColor3f( 1, 0, 0 );
-        gl.glVertex3f( 0.25f, 0.25f, 0 );
-        gl.glColor3f( 0, 1, 0 );
-        gl.glVertex3f( 0.5f, 0.25f, 0 );
-        gl.glColor3f( 0, 0, 1 );
-        gl.glVertex3f( 0.25f, 0.5f, 0 );
-        gl.glEnd();
-        gl.glEndList();
+        liCake = gl2.glGenLists(1);
+        initCylinder(gl2, 6f, 4f,new Triple(38,18,7),new Triple(92,66,31), liCake,4);
+        liCandle = gl2.glGenLists(1);
+        initCylinder(gl2, .25f, 3f,new Triple(183,178,96),new Triple(220,215,145), liCandle,0);
     }
     private static float findRadius(float z, float R){
         //find the radii by using the pythagorean theorem
@@ -82,11 +76,11 @@ public class Cake {
                 float x = r1 * cosine;
                 float y = r1 * sine;
                 
-                gl.glColor3ub((byte)(red+i%15*2), (byte)(green+i%15*2),(byte)(blue+i%15*2));
+                gl.glColor3ub((byte)(red+i%15*4), (byte)(green+i%15*4),(byte)(blue+i%15*4));
                 gl.glVertex3f(x,y,z1);
                 x = (r2) * cosine;
                 y = (r2) * sine;
-                gl.glColor3ub((byte)(oldR+i%15*2), (byte)(oldG+i%15*2),(byte)(oldB+i%15*2));
+                gl.glColor3ub((byte)(oldR+i%15*4), (byte)(oldG+i%15*4),(byte)(oldB+i%15*4));
                 gl.glVertex3f(x,y,z2);
             }
             oldR = red;
@@ -97,35 +91,34 @@ public class Cake {
         gl.glEndList();
     }
     /**
-     * Creates a cylinder 
+     * Creates a cylinder, listID must be a valid list ie. listID = gl.glGenLists(1) must be called before using it
      * @param gl
      * @param r
      * @param h 
      */
-    protected static void initCylinder(GL2 gl, float r, float h){
-        liCyl = gl.glGenLists(1);
-        gl.glNewList(liCyl, GL2.GL_COMPILE);
-        gl.glLoadIdentity();
+    protected static void initCylinder(GL2 gl, float r, float h, Triple startColor, Triple endColor, int listID, int colorFactor){
+        gl.glNewList(listID, GL2.GL_COMPILE);
+        //gl.glLoadIdentity();
         gl.glBegin(GL2.GL_QUAD_STRIP);
-        float zScale = h / 10f;
-        double rScale = 54.0 / 20.0;
-        double gScale = 48.0/20.0;
-        double bScale = 24.0/20.0;
+        float zScale = h / 20f;
+        double rScale = (endColor.R()-startColor.R())/20.0;
+        double gScale = (endColor.G()-startColor.G())/20.0;
+        double bScale = (endColor.B()-startColor.B())/20.0;
         int oldR = -1;
         int oldG = -1;
         int oldB = -1;
         for(int k = 0; k < 20; k++){
             float z1 = (k+1)*zScale;
             float z2 = k*zScale;
-            int red = (int)(rScale * k + 38);
-            int green = (int)(gScale * k + 18);
-            int blue = (int)(bScale * k + 7);
+            int red = (int)(rScale * k + startColor.R());
+            int green = (int)(gScale * k + startColor.G());
+            int blue = (int)(bScale * k + startColor.B());
             if(oldR==-1){
                 oldR = red;
                 oldG = green;
                 oldB = blue;
             }
-            //System.out.printf("R: %d, G: %d, B: %d\n", red,green,blue);
+            System.out.printf("R: %d, G: %d, B: %d\n", red,green,blue);
             for(int i=0; i <= 30; i++){
                 double theta = i/30.0*2*Math.PI;
                 float cosine = (float)Math.cos(theta); 
@@ -133,9 +126,9 @@ public class Cake {
                 float x = r * cosine;
                 float y = r * sine;
               
-                gl.glColor3ub((byte)(red+i%15*2), (byte)(green+i%15*2),(byte)(blue+i%15*2));
+                gl.glColor3ub((byte)(red+i%15*colorFactor), (byte)(green+i%15*colorFactor),(byte)(blue+i%15*colorFactor));
                 gl.glVertex3f(x,y,z1);
-                gl.glColor3ub((byte)(oldR+i%15*2), (byte)(oldG+i%15*2),(byte)(oldB+i%15*2));
+                gl.glColor3ub((byte)(oldR+i%15*colorFactor), (byte)(oldG+i%15*colorFactor),(byte)(oldB+i%15*colorFactor));
                 gl.glVertex3f(x,y,z2);
             }
             if(k==0 || k ==19){//use triangle fan for the top and bottom
@@ -153,7 +146,7 @@ public class Cake {
                     float x = r * cosine;
                     float y = r * sine;
               
-                    gl.glColor3ub((byte)(red+i%15*2), (byte)(green+i%15*2),(byte)(blue+i%15*2));
+                    gl.glColor3ub((byte)(red+i%15*(colorFactor*.3)), (byte)(green+i%15*(colorFactor*.3)),(byte)(blue+i%15*(colorFactor*.3)));
                     gl.glVertex3f(x,y,z);
                 }
                 gl.glEnd();
@@ -170,16 +163,35 @@ public class Cake {
     protected static void render( GL2 gl ) {
         gl.glClear( GL.GL_COLOR_BUFFER_BIT );
         //gl.glCallList(list);
-        gl.glCallList(liCyl);
+        gl.glCallList(liCake);
         gl.glPushMatrix();
-        gl.glTranslatef(2.5f, 2.5f, 2.5f);
+        gl.glTranslatef(3f, 3f, 4f);
         gl.glScalef(.35f, .35f, .35f);
+        //gl.glTranslatef(2f, 2f, 4f);
         gl.glCallList(liSphere);
         gl.glPopMatrix();
         gl.glPushMatrix();
-        gl.glTranslatef(2.5f, 5f, 0f);
+        gl.glTranslatef(-3f, -3f, 4f);
         gl.glScalef(.35f, .35f, .35f);
+        //gl.glTranslatef(-2f,-2f,4f);
         gl.glCallList(liSphere);
+        gl.glPopMatrix();
+        gl.glPushMatrix();
+        gl.glTranslatef(-3f, 3f, 4f);
+        gl.glScalef(.35f, .35f, .35f);
+       // gl.glTranslatef(-2f,2f,4f);
+        gl.glCallList(liSphere);
+        gl.glPopMatrix();
+        gl.glPushMatrix();
+        gl.glTranslatef(3f, -3f, 4f);
+        gl.glScalef(.35f, .35f, .35f);
+        //gl.glTranslatef(2f,-2f,4f);
+        gl.glCallList(liSphere);
+        gl.glPopMatrix();
+        gl.glPushMatrix();
+        gl.glTranslatef(0f, 0f, 4f);
+//        gl.glScalef(.05f,.05f,.5f);
+        gl.glCallList(liCandle);
         gl.glPopMatrix();
         gl.glFlush();
     }
