@@ -14,6 +14,7 @@ public class Cake {
     protected static void setup( GL2 gl2, int width, int height ) {
         gl2.glViewport( 0, 0, width, height );
         gl2.glMatrixMode( GL2.GL_PROJECTION );
+        gl2.glEnable(GL.GL_DEPTH_TEST);
         gl2.glLoadIdentity();
         GLU glu = new GLU();
         glu.gluPerspective(90f, width/(float)height, 5, 50);
@@ -22,8 +23,7 @@ public class Cake {
         //glu.gluPerspective(60f, width/height, 1, 20);
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
-        //glu.gluLookAt(10, 0, 5, 0, 0, 0, 0, 0, 1);
-        glu.gluLookAt(  15, 0, 15,  //eye position x,y,z
+        glu.gluLookAt(  10, 0, 8,  //eye position x,y,z
                         0,  0, 0,   //focus x,y,z
                         0,  0, 1  );//camera up x,y,z
                 
@@ -161,7 +161,7 @@ public class Cake {
         
     }
     protected static void render( GL2 gl ) {
-        gl.glClear( GL.GL_COLOR_BUFFER_BIT );
+        gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         //gl.glCallList(list);
         gl.glCallList(liCake);
         gl.glPushMatrix();
