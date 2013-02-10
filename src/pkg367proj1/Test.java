@@ -45,12 +45,10 @@ public class Test {
             }
         });
 
-        final Frame frame = new Frame( "One Triangle AWT" );
+        Frame frame = new Frame( "Portal Scene" );
         frame.add( glcanvas );
         frame.addWindowListener( new WindowAdapter() {
             public void windowClosing( WindowEvent windowevent ) {
-                frame.remove( glcanvas );
-                frame.dispose();
                 System.exit( 0 );
             }
         });

@@ -8,51 +8,51 @@ package pkg367proj1;
  *
  * @author warnecam
  */
-public class Triple {
-    private int x,y,z;
-    public Triple(int first, int second, int third){
+public class Triple<T> {
+    private T x,y,z;
+    public Triple(T first, T second, T third){
         x = first;
         y = second;
         z = third;
     }
-    public int X(){
+    public T X(){
         return x;
     }
-    public int Y(){
+    public T Y(){
         return y;
     }
-    public int Z(){
+    public T Z(){
         return z;
     }
-    public int R(){
+    public T R(){
         return x;
     }
-    public int G(){
+    public T G(){
         return y;
     }
-    public int B(){
+    public T B(){
         return z;
     }
-    public void setX(int x) {
+    public void setX(T x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    public void setY(T y) {
         this.y = y;
     }
 
-    public void setZ(int z) {
+    public void setZ(T z) {
         this.z = z;
     }
-    public void setR(int r) {
+    public void setR(T r) {
         this.x = r;
     }
 
-    public void setG(int g) {
+    public void setG(T g) {
         this.y = g;
     }
 
-    public void setB(int b) {
+    public void setB(T b) {
         this.z = b;
     }
 }

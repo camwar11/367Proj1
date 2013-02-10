@@ -9,18 +9,16 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
 public class Cake {
-    static int list;
-    static int liSphere,liCake, liCandle;
+    static int liBerry,liCake, liCandle, liFrosting, liTopping;
+    static double[] cfCake, cfCandle;
+    static double[][] cfToppings;
     protected static void setup( GL2 gl2, int width, int height ) {
         gl2.glViewport( 0, 0, width, height );
         gl2.glMatrixMode( GL2.GL_PROJECTION );
         gl2.glEnable(GL.GL_DEPTH_TEST);
         gl2.glLoadIdentity();
         GLU glu = new GLU();
-        glu.gluPerspective(90f, width/(float)height, 5, 50);
-        //gl2.glOrtho( -10, 10, -10, 10, -10, 10 );
-        
-        //glu.gluPerspective(60f, width/height, 1, 20);
+        glu.gluPerspective(90f, width/(float)height, 5, 100);
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
         glu.gluLookAt(  10, 0, 8,  //eye position x,y,z
@@ -29,11 +27,105 @@ public class Cake {
                 
     }
     protected static void init(GL2 gl2){
+        gl2.glPolygonMode (GL.GL_FRONT, GL2.GL_FILL);
+        gl2.glPolygonMode (GL.GL_BACK, GL2.GL_LINE);        
+        
+        //Generate lists
+        liBerry = gl2.glGenLists(1);
+        gl2.glNewList(liBerry, GL2.GL_COMPILE);
         initSphere(gl2, 2f);
+        gl2.glEndList();
+        
         liCake = gl2.glGenLists(1);
-        initCylinder(gl2, 6f, 4f,new Triple(38,18,7),new Triple(92,66,31), liCake,4);
+        gl2.glNewList(liCake, GL2.GL_COMPILE);
+        initCylinder(gl2, 6f, 4f,new Triple(38,18,7),new Triple(92,66,31),4);
+        gl2.glEndList();
+        
         liCandle = gl2.glGenLists(1);
-        initCylinder(gl2, .25f, 3f,new Triple(183,178,96),new Triple(220,215,145), liCandle,0);
+        gl2.glNewList(liCandle, GL2.GL_COMPILE);
+        initCylinder(gl2, .25f, 3f,new Triple(183,178,96),new Triple(220,215,145), 0);
+        gl2.glPushMatrix();
+        gl2.glBegin(GL.GL_LINES);
+        gl2.glColor3f(1f,1f,1f);
+        gl2.glLineWidth(4f);
+        gl2.glVertex3f(0f, 0f, 3f);
+        gl2.glVertex3f(0f, 0f, 3.25f);
+        gl2.glEnd();
+        gl2.glPopMatrix();
+        gl2.glEndList();
+        
+        liFrosting= gl2.glGenLists(1) ;
+        gl2.glNewList(liFrosting, GL2.GL_COMPILE);
+        initCylinder(gl2, 1.0f, .3f, new Triple(100, 100, 100), new Triple(210,210,210),0);
+        gl2.glEndList();
+        
+        liTopping = gl2.glGenLists(1);
+        gl2.glNewList(liTopping, GL2.GL_COMPILE);
+        gl2.glPushMatrix();
+        gl2.glScalef(.35f, .35f, .35f);
+        gl2.glCallList(liBerry);
+        gl2.glPopMatrix();
+        gl2.glCallList(liFrosting);
+        gl2.glEndList();
+        
+        setUpCoordFrames(gl2);
+    }
+    
+    private static void setUpCoordFrames(GL2 gl2){
+        //initialize all coord frames
+        gl2.glPushMatrix();
+        cfToppings = new double[8][16];
+        cfCake = new double[16];
+        cfCandle = new double[16];
+        gl2.glLoadIdentity();
+        gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, cfCake,0);
+        for(int i =0; i < cfToppings.length; i++){
+            gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, cfToppings[i],0);
+        }
+        gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, cfCandle,0);
+        gl2.glPopMatrix();
+        
+        globalTranslate(gl2, cfCandle, new Triple(0f,0f,4f));//candle goes in the the middle and on top of the cake
+        
+        
+        for(int i = 0; i < cfToppings.length; i++){
+            globalTranslate(gl2,cfToppings[i],new Triple(3f,3f,4f));
+            float degrees = (360f/cfToppings.length)*i;
+            System.out.println(degrees);
+            globalRotate(gl2, degrees, cfToppings[i], new Triple(0f,0f,1f));//rotate to populate the cake with berries!
+            localRotate(gl2, -degrees, cfToppings[i], new Triple(0f,0f,1f));//rotate the berries so that the shading is fixed
+        }
+        
+    }
+    public static void globalRotate(GL2 gl2, float degrees, double[] matrix, Triple<Float> axis){
+        gl2.glPushMatrix();
+        gl2.glLoadIdentity();
+        gl2.glRotatef(degrees, axis.X(), axis.Y(), axis.Z());
+        gl2.glMultMatrixd(matrix, 0);
+        gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, matrix, 0);
+        gl2.glPopMatrix();
+    }
+    public static void globalTranslate(GL2 gl2,double[] matrix, Triple<Float> translation){
+        gl2.glPushMatrix();
+        gl2.glLoadIdentity();
+        gl2.glTranslatef(translation.X(), translation.Y(), translation.Z());
+        gl2.glMultMatrixd(matrix, 0);
+        gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, matrix, 0);
+        gl2.glPopMatrix();
+    }
+    public static void localRotate(GL2 gl2, float degrees, double[] matrix, Triple<Float> axis){
+        gl2.glPushMatrix();
+        gl2.glLoadMatrixd(matrix, 0);
+        gl2.glRotatef(degrees, axis.X(), axis.Y(), axis.Z());
+        gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, matrix, 0);
+        gl2.glPopMatrix();
+    }
+    public static void localTranslate(GL2 gl2,double[] matrix, Triple<Float> translation){
+        gl2.glPushMatrix();
+        gl2.glLoadMatrixd(matrix,0);
+        gl2.glTranslatef(translation.X(), translation.Y(), translation.Z());
+        gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, matrix, 0);
+        gl2.glPopMatrix();
     }
     private static float findRadius(float z, float R){
         //find the radii by using the pythagorean theorem
@@ -45,9 +137,6 @@ public class Cake {
      * and a bottom color of (103,21,27)
      */
     protected static void initSphere(GL2 gl, float r){
-        liSphere = gl.glGenLists(1);
-        gl.glNewList(liSphere, GL2.GL_COMPILE);
-        //gl.glLoadIdentity();
         gl.glBegin(GL2.GL_QUAD_STRIP);
         float zScale = r / 10f;
         double rScale = 42.0 / 10.0;
@@ -88,7 +177,6 @@ public class Cake {
             oldB = blue;
         }
         gl.glEnd();
-        gl.glEndList();
     }
     /**
      * Creates a cylinder, listID must be a valid list ie. listID = gl.glGenLists(1) must be called before using it
@@ -96,9 +184,7 @@ public class Cake {
      * @param r
      * @param h 
      */
-    protected static void initCylinder(GL2 gl, float r, float h, Triple startColor, Triple endColor, int listID, int colorFactor){
-        gl.glNewList(listID, GL2.GL_COMPILE);
-        //gl.glLoadIdentity();
+    protected static void initCylinder(GL2 gl, float r, float h, Triple<Integer> startColor, Triple<Integer> endColor, int colorFactor){
         gl.glBegin(GL2.GL_QUAD_STRIP);
         float zScale = h / 20f;
         double rScale = (endColor.R()-startColor.R())/20.0;
@@ -118,7 +204,6 @@ public class Cake {
                 oldG = green;
                 oldB = blue;
             }
-            System.out.printf("R: %d, G: %d, B: %d\n", red,green,blue);
             for(int i=0; i <= 30; i++){
                 double theta = i/30.0*2*Math.PI;
                 float cosine = (float)Math.cos(theta); 
@@ -140,7 +225,10 @@ public class Cake {
                 gl.glBegin(GL2.GL_TRIANGLE_FAN);
                 gl.glVertex3f(0,0,z);
                 for(int i=0; i <= 30; i++){
-                    double theta = i/30.0*2*Math.PI;
+                    int angleFactor = 2;
+                    if(k==0)
+                        angleFactor = -angleFactor;//need this to draw the bottom in a CC rotation so that it is facing out
+                    double theta = i/30.0*angleFactor*Math.PI;
                     float cosine = (float)Math.cos(theta); 
                     float sine = (float)Math.sin(theta);
                     float x = r * cosine;
@@ -156,43 +244,36 @@ public class Cake {
             oldG = green;
             oldB = blue;
         }
-        gl.glEnd();
-        gl.glEndList();
-        
+        gl.glEnd();        
     }
     protected static void render( GL2 gl ) {
         gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        //gl.glCallList(list);
+        
+        //Cake-------------------------------------
+        gl.glPushMatrix();
+        gl.glMultMatrixd(cfCake, 0);
         gl.glCallList(liCake);
-        gl.glPushMatrix();
-        gl.glTranslatef(3f, 3f, 4f);
-        gl.glScalef(.35f, .35f, .35f);
-        //gl.glTranslatef(2f, 2f, 4f);
-        gl.glCallList(liSphere);
         gl.glPopMatrix();
+        
+        /**
+         * Toppings-------------------------------
+         */
+        for(int i = 0; i < cfToppings.length; i++){
+            gl.glPushMatrix();
+            gl.glMultMatrixd(cfToppings[i], 0);
+            gl.glCallList(liTopping);
+            gl.glPopMatrix();
+        }
+        
+        /**
+         * Candle---------------------------------
+         */
         gl.glPushMatrix();
-        gl.glTranslatef(-3f, -3f, 4f);
-        gl.glScalef(.35f, .35f, .35f);
-        //gl.glTranslatef(-2f,-2f,4f);
-        gl.glCallList(liSphere);
-        gl.glPopMatrix();
-        gl.glPushMatrix();
-        gl.glTranslatef(-3f, 3f, 4f);
-        gl.glScalef(.35f, .35f, .35f);
-       // gl.glTranslatef(-2f,2f,4f);
-        gl.glCallList(liSphere);
-        gl.glPopMatrix();
-        gl.glPushMatrix();
-        gl.glTranslatef(3f, -3f, 4f);
-        gl.glScalef(.35f, .35f, .35f);
-        //gl.glTranslatef(2f,-2f,4f);
-        gl.glCallList(liSphere);
-        gl.glPopMatrix();
-        gl.glPushMatrix();
-        gl.glTranslatef(0f, 0f, 4f);
-//        gl.glScalef(.05f,.05f,.5f);
+        gl.glMultMatrixd(cfCandle, 0);
+        //gl.glTranslatef(0f, 0f, 4f);
         gl.glCallList(liCandle);
         gl.glPopMatrix();
+        
         gl.glFlush();
     }
 }
