@@ -10,8 +10,12 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.awt.GLCanvas;
 
 import java.awt.Frame;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 /**
  *
  * @author warnecam
@@ -21,7 +25,39 @@ public class Test {
         GLProfile glprofile = GLProfile.getDefault();
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
         final GLCanvas glcanvas = new GLCanvas( glcapabilities );
+        glcanvas.addKeyListener(new KeyListener(){
 
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    char key = e.getKeyChar();
+                    System.out.println("Typed: "+key);
+                    if(key == 'n'){
+                        Cake.sceneNum = (Cake.sceneNum + 1) % 4;
+                        System.out.println("Next Scene: "+Cake.sceneNum);
+                    }else if(key == 'p'){
+                        if(Cake.sceneNum == 0)
+                            Cake.sceneNum = 4;
+                        Cake.sceneNum = (Cake.sceneNum - 1) % 4;
+                        System.out.println("Prev Scene: "+Cake.sceneNum);
+                    }else if(key == 'w'){
+                        Cake.fillMode = GL2.GL_LINE;
+                    }else if(key == 'f'){
+                        Cake.fillMode = GL2.GL_FILL;
+                    }
+                    glcanvas.display();
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                }
+        
+        
+        
+        });
         glcanvas.addGLEventListener( new GLEventListener() {
             
             @Override
