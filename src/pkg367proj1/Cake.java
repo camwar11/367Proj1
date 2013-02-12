@@ -28,7 +28,7 @@ public class Cake {
         gl2.glEnable(GL.GL_DEPTH_TEST);
         gl2.glLoadIdentity();
         GLU glu = new GLU();
-        glu.gluPerspective(90f, width/(float)height, 5, 100);
+        glu.gluPerspective(90f, width/(float)height, 4, 1000);
         gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
         glu.gluLookAt(  lookAts[sceneNum][0], lookAts[sceneNum][1], lookAts[sceneNum][2],  //eye position x,y,z
@@ -43,10 +43,10 @@ public class Cake {
         
         //setup the 4 look at positions 
         lookAts = new int[4][9];
-        lookAts[0] = new int[]{10,0,10,0,0,0,0,0,1};
-        lookAts[1] = new int[]{10,20,4,0,0,0,0,0,1};
+        lookAts[0] = new int[]{0,30,30,0,0,0,0,0,1};
+        lookAts[1] = new int[]{10,24,4,0,0,0,0,0,1};
         lookAts[2] = new int[]{0,0,30,0,0,0,0,1,0};
-        lookAts[3] = new int[]{0,20,10,0,0,0,0,0,1};
+        lookAts[3] = new int[]{100,-50,10,0,0,0,0,0,1};
         
         
         //Generate lists
