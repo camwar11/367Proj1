@@ -6,6 +6,10 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
+/**
+ *
+ * @author Cam Warner, Andrew Zimny, Eric Munson
+ */
 public class CubeSide {
     static double[][] cfCubeSides;
     static ArrayList<double[]> cfCubes;

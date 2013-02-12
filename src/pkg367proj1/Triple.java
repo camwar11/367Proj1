@@ -6,7 +6,7 @@ package pkg367proj1;
 
 /**
  *
- * @author warnecam
+ * @author Cam Warner, Andrew Zimny, Eric Munson
  */
 public class Triple<T> {
     private T x,y,z;

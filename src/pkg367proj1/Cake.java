@@ -4,23 +4,37 @@
  */
 package pkg367proj1;
 
+import javax.media.opengl.awt.GLCanvas;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
+import javax.swing.Timer;
 
-   
-
-
-
-
-
+/**
+ *
+ * @author Cam Warner, Andrew Zimny, Eric Munson
+ */
 public class Cake {
     static int liBerry,liCake, liCandle, liFrosting, liTopping, liBottom, liBottomPts;
     static double[] cfCake, cfCandle, cfBottom;
     static double[][] cfToppings, cfBottomPts;
-    static int[][] lookAts;
+    static double[][] lookAts;
     static int sceneNum = 0;
+    static int prevSceneNum = 0;
+    static int movePos = 0;
     static int fillMode = GL2.GL_FILL;
+    static double eyeX;
+    static double eyeY;
+    static double eyeZ;
+    static double focX;
+    static double focY;
+    static double focZ;
+    static double camX;
+    static double camY;
+    static double camZ;
+    static GLCanvas glcanvas;
     
     protected static void setup( GL2 gl2, int width, int height ) {
         gl2.glViewport( 0, 0, width, height );
@@ -38,16 +52,23 @@ public class Cake {
     }
      
     protected static void init(GL2 gl2){
-        gl2.glPolygonMode (GL.GL_FRONT, GL2.GL_FILL);
-        gl2.glPolygonMode (GL.GL_BACK, GL2.GL_LINE);        
-        
         //setup the 4 look at positions 
-        lookAts = new int[4][9];
-        lookAts[0] = new int[]{0,30,30,0,0,0,0,0,1};
-        lookAts[1] = new int[]{10,24,4,0,0,0,0,0,1};
-        lookAts[2] = new int[]{0,0,30,0,0,0,0,1,0};
-        lookAts[3] = new int[]{100,-50,10,0,0,0,0,0,1};
+        lookAts = new double[4][9];
+        lookAts[0] = new double[]{0,30,30,0,0,0,0,0,1};
+        lookAts[1] = new double[]{10,24,4,0,0,0,0,0,1};
+        lookAts[2] = new double[]{0,0,30,0,0,0,0,1,0};
+        lookAts[3] = new double[]{100,-50,10,0,0,0,0,0,1};
         
+        //A Timer is used to calculate the movement between points that we are at for smooth animation
+        int delay = 100; //milliseconds
+        ActionListener calcMovement = new ActionListener() {
+             public void actionPerformed(ActionEvent evt) {
+                 Cake.calcMove();
+            }
+        };
+        new Timer(delay, calcMovement).start();
+        gl2.glPolygonMode (GL.GL_FRONT, GL2.GL_FILL);
+        gl2.glPolygonMode (GL.GL_BACK, GL2.GL_LINE);                
         
         //Generate lists
         liBerry = gl2.glGenLists(1);
@@ -374,9 +395,10 @@ public class Cake {
         gl.glMatrixMode( GL2.GL_MODELVIEW );
         gl.glLoadIdentity();
         GLU glu = new GLU();
-        glu.gluLookAt(  lookAts[sceneNum][0], lookAts[sceneNum][1], lookAts[sceneNum][2],  //eye position x,y,z
-                        lookAts[sceneNum][3],  lookAts[sceneNum][4], lookAts[sceneNum][5],   //focus x,y,z
-                        lookAts[sceneNum][6],  lookAts[sceneNum][7], lookAts[sceneNum][8]);//camera up x,y,z
+        
+        glu.gluLookAt(  eyeX, eyeY, eyeZ,  //eye position x,y,z
+                        focX,  focY, focZ,   //focus x,y,z
+                        camX,  camY, camZ);//camera up x,y,z
         
         
         gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -424,5 +446,40 @@ public class Cake {
         gl.glPopMatrix();
         
         gl.glFlush();
+    }
+    
+    protected static void calcMove(){
+        eyeX = lookAts[sceneNum][0];
+        eyeY = lookAts[sceneNum][1];
+        eyeZ = lookAts[sceneNum][2];
+        focX = lookAts[sceneNum][3];
+        focY = lookAts[sceneNum][4];
+        focZ = lookAts[sceneNum][5];
+        camX = lookAts[sceneNum][6];
+        camY = lookAts[sceneNum][7];
+        camZ = lookAts[sceneNum][8];
+        
+        if(sceneNum != prevSceneNum){
+            eyeX = ((eyeX-lookAts[prevSceneNum][0])/20 *movePos) + lookAts[prevSceneNum][0];
+            eyeY = ((eyeY-lookAts[prevSceneNum][1])/20*movePos) + lookAts[prevSceneNum][1];
+            eyeZ = ((eyeZ-lookAts[prevSceneNum][2])/20*movePos) + lookAts[prevSceneNum][2];
+            focX = ((focX-lookAts[prevSceneNum][3])/20*movePos) + lookAts[prevSceneNum][3];
+            focY = ((focY-lookAts[prevSceneNum][4])/20*movePos) + lookAts[prevSceneNum][4];
+            focZ = ((focZ-lookAts[prevSceneNum][5])/20*movePos) + lookAts[prevSceneNum][5];
+            camX = ((camX-lookAts[prevSceneNum][6])/20*movePos) + lookAts[prevSceneNum][6];
+            camY = ((camY-lookAts[prevSceneNum][7])/20*movePos) + lookAts[prevSceneNum][7];
+            camZ = ((camZ-lookAts[prevSceneNum][8])/20*movePos) + lookAts[prevSceneNum][8];
+            movePos++;
+            
+            //update the graphics as we move
+            glcanvas.display();
+            if(movePos == 21){
+                prevSceneNum = sceneNum;
+                movePos = 0;
+            }
+                
+            
+        }
+        
     }
 }

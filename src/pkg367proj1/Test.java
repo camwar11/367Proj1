@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package pkg367proj1;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -18,13 +15,14 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 /**
  *
- * @author warnecam
+ * @author Cam Warner, Andrew Zimny, Eric Munson
  */
 public class Test {
         public static void main( String [] args ) {
         GLProfile glprofile = GLProfile.getDefault();
         GLCapabilities glcapabilities = new GLCapabilities( glprofile );
         final GLCanvas glcanvas = new GLCanvas( glcapabilities );
+        Cake.glcanvas = glcanvas;
         glcanvas.addKeyListener(new KeyListener(){
 
                 @Override
