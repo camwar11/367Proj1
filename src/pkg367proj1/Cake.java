@@ -12,6 +12,9 @@ public class Cake {
     static int liBerry,liCake, liCandle, liFrosting, liTopping;
     static double[] cfCake, cfCandle;
     static double[][] cfToppings;
+    static int[][] lookAts;
+    static int sceneNum = 0;
+    static int fillMode = GL2.GL_FILL;
     protected static void setup( GL2 gl2, int width, int height ) {
         gl2.glViewport( 0, 0, width, height );
         gl2.glMatrixMode( GL2.GL_PROJECTION );
@@ -19,16 +22,24 @@ public class Cake {
         gl2.glLoadIdentity();
         GLU glu = new GLU();
         glu.gluPerspective(90f, width/(float)height, 5, 100);
-        gl2.glMatrixMode( GL2.GL_MODELVIEW );
+        /*gl2.glMatrixMode( GL2.GL_MODELVIEW );
         gl2.glLoadIdentity();
-        glu.gluLookAt(  10, 0, 8,  //eye position x,y,z
-                        0,  0, 0,   //focus x,y,z
-                        0,  0, 1  );//camera up x,y,z
-                
+        glu.gluLookAt(  lookAts[sceneNum][0], lookAts[sceneNum][1], lookAts[sceneNum][2],  //eye position x,y,z
+                        lookAts[sceneNum][3],  lookAts[sceneNum][4], lookAts[sceneNum][5],   //focus x,y,z
+                        lookAts[sceneNum][6],  lookAts[sceneNum][7], lookAts[sceneNum][8]);//camera up x,y,z
+          */      
     }
     protected static void init(GL2 gl2){
         gl2.glPolygonMode (GL.GL_FRONT, GL2.GL_FILL);
         gl2.glPolygonMode (GL.GL_BACK, GL2.GL_LINE);        
+        
+        //setup the 4 look at positions 
+        lookAts = new int[4][9];
+        lookAts[0] = new int[]{7,0,7,0,0,0,0,0,1};
+        lookAts[1] = new int[]{10,20,4,0,0,0,0,0,1};
+        lookAts[2] = new int[]{0,0,30,0,0,0,0,1,0};
+        lookAts[3] = new int[]{0,20,10,0,0,0,0,0,1};
+        
         
         //Generate lists
         liBerry = gl2.glGenLists(1);
@@ -247,6 +258,16 @@ public class Cake {
         gl.glEnd();        
     }
     protected static void render( GL2 gl ) {
+        gl.glPolygonMode (GL.GL_FRONT, fillMode);
+        //have to do this here so that the lookat updates when the view is changed with a keypress
+        gl.glMatrixMode( GL2.GL_MODELVIEW );
+        gl.glLoadIdentity();
+        GLU glu = new GLU();
+        glu.gluLookAt(  lookAts[sceneNum][0], lookAts[sceneNum][1], lookAts[sceneNum][2],  //eye position x,y,z
+                        lookAts[sceneNum][3],  lookAts[sceneNum][4], lookAts[sceneNum][5],   //focus x,y,z
+                        lookAts[sceneNum][6],  lookAts[sceneNum][7], lookAts[sceneNum][8]);//camera up x,y,z
+        
+        
         gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         
         //Cake-------------------------------------
