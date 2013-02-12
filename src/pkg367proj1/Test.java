@@ -68,6 +68,8 @@ public class Test {
             @Override
             public void init( GLAutoDrawable glautodrawable ) {
                 Cake.init(glautodrawable.getGL().getGL2());
+                CubeSide2.init(glautodrawable.getGL().getGL2());
+
             }
             
             
@@ -78,7 +80,7 @@ public class Test {
             @Override
             public void display( GLAutoDrawable glautodrawable ) {
                 Cake.render( glautodrawable.getGL().getGL2());
-            }
+                CubeSide2.render( glautodrawable.getGL().getGL2());            }
         });
 
         Frame frame = new Frame( "Portal Scene" );

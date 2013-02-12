@@ -33,7 +33,7 @@ public class CubeSide2 {
         
         //////////////////////////////////////////////////////////////////////////////
         //bottom middle left
-        /*
+        
         gl2.glBegin( GL.GL_TRIANGLE_STRIP );
         gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+2.25f, y+.35f, z );
@@ -69,7 +69,7 @@ public class CubeSide2 {
         gl2.glVertex3f( x+3.755f, y+1.10f, z-.75f );
         gl2.glVertex3f( x+3.75f, y+1.10f, z );
         gl2.glEnd();
-        */
+        
         ///////////////////////////////////////////////////////////////////////////////////
         //top middle front
         gl2.glBegin( GL.GL_TRIANGLE_STRIP );
@@ -130,8 +130,6 @@ public class CubeSide2 {
         gl2.glVertex3f( x+5.75f, y+2.25f, z );
         gl2.glEnd();
        
-       // x=x-.1f;
-                //y=y-.1f;
 
         //top right
         gl2.glBegin( GL.GL_TRIANGLE_STRIP );
@@ -194,8 +192,38 @@ public class CubeSide2 {
         gl2.glVertex3f( x+2.00f, y+1.125f, z );//5
         gl2.glVertex3f( x+2.00f, y+.25f, z );//1
         gl2.glEnd();
+     
+        
+ ////////////////////////////////////////////////////////////////////////////////////       
+        //bottom corner left sides
+        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glColor3f( 1, 1, 1 );
+        gl2.glVertex3f( x+1.125f, y+2.00f, z );//4
+        gl2.glVertex3f( x+1.125f, y+2.00f, z-.15f );//4
+        gl2.glVertex3f( x+.25f, y+2.00f, z );//4
+        gl2.glVertex3f( x+.25f, y+2.00f, z-.15f );//4
+        gl2.glEnd();
         
         
+        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glColor3f( 1, 1, 1 );
+        gl2.glVertex3f( x+2.00f, y+1.125f, z );//4
+        gl2.glVertex3f( x+2.00f, y+1.125f, z-.15f );//4
+        gl2.glVertex3f( x+1.125f, y+2.00f, z );//4
+        gl2.glVertex3f( x+1.125f, y+2.00f, z-.15f );//4
+        gl2.glEnd();
+        
+        
+        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glColor3f( 1, 1, 1 );
+        gl2.glVertex3f( x+2.00f, y+.25f, z );//4
+        gl2.glVertex3f( x+2.00f, y+.25f, z-.15f );//4
+        gl2.glVertex3f( x+2.00f, y+1.125f, z );//4
+        gl2.glVertex3f( x+2.00f, y+1.125f, z-.15f );//4
+        gl2.glEnd();
+        
+        
+/////////////////////////////////////////////////////////////////////////////////////      
         //bottom right
         gl2.glBegin( GL.GL_TRIANGLE_STRIP );
         gl2.glColor3f( 1, 1, 1 );
@@ -215,6 +243,14 @@ public class CubeSide2 {
         gl2.glVertex3f( x+5.75f, y+1.125f, z );//5
         gl2.glVertex3f( x+5.75f, y+.25f, z );//1
         gl2.glEnd();
+        
+//        gl2.glLineWidth(.2f); 
+//        gl2.glBegin(GL.GL_LINES); 
+//        gl2.glVertex3f( x+2.5f, y+2.5f, z); 
+//        gl2.glVertex3f( x+2.5f, y-2.5f, z); 
+//        gl2.glEnd(); 
+        
+
         }
     
     
@@ -275,9 +311,17 @@ public class CubeSide2 {
         gl2.glVertex3f( x+.50f, y+.50f, z );
         gl2.glVertex3f( x+5.50f, y+5.50f, z );
         gl2.glVertex3f( x+5.50f, y+.50f, z );
-        
         gl2.glEnd();
         
+        ////////////////////////////////////////////////////////////////////////////
+        //attempt at lines = fail
+        gl2.glLineWidth(.2f); 
+        gl2.glBegin(GL.GL_LINES);
+        gl2.glColor3f( 1, 0, 0 );
+        gl2.glVertex3f( x+5.5f, y, z-2.5f); 
+        gl2.glVertex3f( x+.5f, y, z-2.5f); 
+        gl2.glEnd(); 
+        ////////////////////////////////////////////////////////////////////////////////
         gl2.glPopMatrix();
 
         gl2.glEndList();
