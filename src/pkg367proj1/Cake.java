@@ -122,9 +122,16 @@ public class Cake {
         }        
         gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, cfCandle,0);
         gl2.glPopMatrix();
+       
+        localTranslate(gl2, cfCake, new Triple(0f,0f,4f));
+        printCoords(cfCake);
+        localRotate(gl2, -60f, cfCake, new Triple(1f,0f,0f));
+        printCoords(cfCake);
+        localTranslate(gl2, cfCake, new Triple(0f,8f,0f));
+        printCoords(cfCake);
         
-        globalTranslate(gl2, cfCandle, new Triple(0f,0f,4f));//candle goes in the the middle and on top of the cake
-        globalTranslate(gl2, cfBottom, new Triple(0f,0f,-.2f));
+        //globalTranslate(gl2, cfCandle, new Triple(0f,0f,4f));//candle goes in the the middle and on top of the cake
+        //globalTranslate(gl2, cfBottom, new Triple(0f,0f,-.2f));
         
         for(int i = 0; i < cfToppings.length; i++){
             globalTranslate(gl2,cfToppings[i],new Triple(3f,3f,4f));
@@ -424,5 +431,16 @@ public class Cake {
         gl.glPopMatrix();
         
         gl.glFlush();
+    }
+
+    private static void printCoords(double[] cfCake) {
+        System.out.println("{");
+        for(int i = 0; i < 4; i++){
+            for(int j = 0; j < 4; j++){
+                System.out.print(cfCake[(4*i)+j]+", ");
+            }
+                System.out.println();
+        }
+        System.out.println("}");
     }
 }
