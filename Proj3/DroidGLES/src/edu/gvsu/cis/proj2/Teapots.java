@@ -2,10 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package pkg367proj1;
+package edu.gvsu.cis.proj2;
 
 import java.util.ArrayList;
-import javax.media.opengl.GL2;
 
 /**
  *
@@ -27,9 +26,9 @@ public class Teapots extends SceneObj{
     }
     
     @Override
-    public void draw(GL2 gl){
+    public void draw(){
         for(Teapot teapot : teapots){
-            teapot.draw(gl);
+            teapot.draw();
         }
     }
     public Teapot get(int pos){

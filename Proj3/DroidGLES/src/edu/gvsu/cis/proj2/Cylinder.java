@@ -5,7 +5,7 @@
 package edu.gvsu.cis.proj2;
 
 import android.opengl.*;
-import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 /**
  *
@@ -16,16 +16,15 @@ public class Cylinder extends SceneObj{
     private int move;
     private boolean increasing = true;
     public boolean moving = true;
-    public Cylinder(GL10 gl, float r, float h, Triple<Float> color){
-        cf = new Matrix();
-        cf.setIdentity();
+    public Cylinder(GL11 gl, float r, float h){//, Triple<Float> color){
+        Matrix.setIdentityM(cf, 0);
         
         listID = gl.glGenLists(1);
-        gl.glNewList(listID, GL2.GL_COMPILE); 
+        gl.glNewList(listID, GL11.GL_COMPILE); 
         gl.glColor3f(color.R(),color.G(),color.B());
         
         //create top and bottom
-        gl.glBegin(GL2.GL_TRIANGLE_FAN);
+        gl.glBegin(GL11.GL_TRIANGLE_FAN);
         gl.glNormal3f(0f, 0f, -1f);
         gl.glVertex3f(0, 0, 0);
         for (int i = 0; i <= 20; i++) {
@@ -64,16 +63,15 @@ public class Cylinder extends SceneObj{
         }
         
         gl.glEnd();
-        GLU glu = new GLU();
         GLUquadric cyl = glu.gluNewQuadric();
-        glu.gluQuadricTexture(cyl, true);
+        GLU.gluQuadricTexture(cyl, true);
         glu.gluCylinder(cyl, r, r, h, 20, 20);
         gl.glEnd();
         gl.glEndList();
     }
-    public void draw(GL2 gl){
+    public void draw(GL11 gl){
         gl.glPushMatrix();
-        gl.glMultMatrixf(getCFf(), 0);
+        gl.glMultMatrixf(getCF(), 0);
         if(moving){
         this.localTranslate(gl,new Triple<Float>((float)move, 0f, 0f));
         if(move == 10 || move == -10){

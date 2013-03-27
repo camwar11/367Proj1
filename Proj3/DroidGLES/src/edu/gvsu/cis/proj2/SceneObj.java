@@ -4,7 +4,6 @@
  */
 package edu.gvsu.cis.proj2;
 
-import javax.microedition.khronos.opengles.GL10;
 import android.opengl.*;
 
 /**
@@ -17,7 +16,7 @@ public class SceneObj implements Drawable{
     protected float[] color = new float[3];
     
     @Override
-    public void draw(GL10 gl) {
+    public void draw() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

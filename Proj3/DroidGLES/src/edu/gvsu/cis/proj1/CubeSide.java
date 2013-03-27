@@ -1,46 +1,45 @@
-package pkg367proj1;
+package edu.gvsu.cis.proj1;
 
 import java.util.ArrayList;
 import java.util.Random;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.glu.GLU;
+import android.opengl.*;
+import javax.microedition.khronos.opengles.GL11;
 
 /**
  *
  * @author Cam Warner, Andrew Zimny, Eric Munson
  */
 public class CubeSide {
-    static double[][] cfCubeSides;
-    static ArrayList<double[]> cfCubes;
+    static float[][] cfCubeSides;
+    static ArrayList<float[]> cfCubes;
     static int sideList, cylList;
     static ArrayList<Integer> cubeLists;
     static Random rand = new Random();
     static boolean renderRandom = true;
     
-    protected static void render( GL2 gl2){
+    protected static void render( GL11 gl2){
         
         //splitting these up lets us not render the random cubes
         for(int i = 0; i < 4; i++){
             gl2.glPushMatrix();
-            gl2.glMultMatrixd(cfCubes.get(i),0);
+            gl2.glMultMatrixf(cfCubes.get(i),0);
             gl2.glCallList(cubeLists.get(i));
             gl2.glPopMatrix();
         }
         
         for(int i = 4; i < cfCubes.size() && renderRandom; i++){
             gl2.glPushMatrix();
-            gl2.glMultMatrixd(cfCubes.get(i),0);
+            gl2.glMultMatrixf(cfCubes.get(i),0);
             gl2.glCallList(cubeLists.get(i));
             gl2.glPopMatrix();
         }
     }
     
     
-    protected static void initCubeAddons( GL2 gl2, float x, float y, float z, Triple<Integer> color){
+    protected static void initCubeAddons( GL11 gl2, float x, float y, float z, Triple<Integer> color){
         Cake.initCylinder(gl2, 1f, .15f, new Triple(127,127,127), color, 1);
         //bottom middle front
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
 
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+2.25f, y+1.10f, z );
@@ -52,7 +51,7 @@ public class CubeSide {
         //////////////////////////////////////////////////////////////////////////////
         //bottom middle left
         
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+2.25f, y+.35f, z );
         gl2.glVertex3f( x+2.25f, y+1.10f, z );
@@ -61,7 +60,7 @@ public class CubeSide {
         gl2.glEnd();
         
         //bottom middle right
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+3.75f, y+1.10f, z );
         gl2.glVertex3f( x+3.75f, y+.35f, z );
@@ -80,7 +79,7 @@ public class CubeSide {
         
         
         //bottom middle top
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+2.25f, y+1.10f, z-.75f );
         gl2.glVertex3f( x+2.25f, y+1.10f, z );
@@ -90,7 +89,7 @@ public class CubeSide {
         
         ///////////////////////////////////////////////////////////////////////////////////
         //top middle front
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+3.75f, y+4.9f, z );
         gl2.glVertex3f( x+3.75f, y+5.75f, z );
@@ -130,7 +129,7 @@ public class CubeSide {
 
         
         //left middle
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+1.10f, y+3.75f, z );
         gl2.glVertex3f( x+.25f, y+3.75f, z );
@@ -140,7 +139,7 @@ public class CubeSide {
 
         
         //right middle
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+4.90f, y+3.75f, z );
         gl2.glVertex3f( x+4.90f, y+2.25f, z );
@@ -150,7 +149,7 @@ public class CubeSide {
        
 
         //top right
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1,1  );
         gl2.glVertex3f( x+4.00f, y+5.75f, z );//1
         gl2.glVertex3f( x+4.00f, y+4.875f, z );//2
@@ -160,7 +159,7 @@ public class CubeSide {
         gl2.glVertex3f( x+5.75f, y+4.875f, z );//6
         gl2.glEnd();
 
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+4.00f, y+4.875f, z );//1
         gl2.glVertex3f( x+4.875f, y+4.00f, z );//3
@@ -171,7 +170,7 @@ public class CubeSide {
 
         
         //top left
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+.25f, y+5.75f, z );//1
         gl2.glVertex3f( x+.25f, y+4.875f, z );//2
@@ -181,7 +180,7 @@ public class CubeSide {
         gl2.glVertex3f( x+2.00f, y+4.875f, z );//6
         gl2.glEnd();
          
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+2.00f, y+4.875f, z );//4
         gl2.glVertex3f( x+1.125f, y+4.875f, z );//2
@@ -192,7 +191,7 @@ public class CubeSide {
         
         
         //bottom left
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+.25f, y+2.00f, z );//2
         gl2.glVertex3f( x+.25f, y+1.125f, z );//1
@@ -201,7 +200,7 @@ public class CubeSide {
         gl2.glVertex3f( x+2.00f, y+1.125f, z );//5
         gl2.glEnd();
         
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+.25f, y+1.125f, z );//4
         gl2.glVertex3f( x+.25f, y+.25f, z );//4
@@ -214,7 +213,7 @@ public class CubeSide {
         
  ////////////////////////////////////////////////////////////////////////////////////       
         //bottom corner left sides
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+1.125f, y+2.00f, z );//4
         gl2.glVertex3f( x+1.125f, y+2.00f, z-.15f );//4
@@ -223,7 +222,7 @@ public class CubeSide {
         gl2.glEnd();
         
         
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+2.00f, y+1.125f, z );//4
         gl2.glVertex3f( x+2.00f, y+1.125f, z-.15f );//4
@@ -232,7 +231,7 @@ public class CubeSide {
         gl2.glEnd();
         
         
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+2.00f, y+.25f, z );//4
         gl2.glVertex3f( x+2.00f, y+.25f, z-.15f );//4
@@ -243,7 +242,7 @@ public class CubeSide {
         
 /////////////////////////////////////////////////////////////////////////////////////      
         //bottom right
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+4.00f, y+1.125f, z );//5
         gl2.glVertex3f( x+4.875f, y+1.125f, z );//6
@@ -252,7 +251,7 @@ public class CubeSide {
         gl2.glVertex3f( x+5.75f, y+2.00f, z );//3
         gl2.glEnd();
         
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         //gl2.glColor3f( 1, 1, 1 );
         gl2.glVertex3f( x+4.00f, y+1.125f, z );//4
         gl2.glVertex3f( x+4.00f, y+.25f, z );//4
@@ -262,7 +261,7 @@ public class CubeSide {
         gl2.glVertex3f( x+5.75f, y+.25f, z );//1
         gl2.glEnd();
         
-        gl2.glBegin( GL.GL_TRIANGLE_STRIP );
+        gl2.glBegin( GL11.GL_TRIANGLE_STRIP );
         gl2.glColor3f( 0.3f, 0.3f, 0.3f );
         
         gl2.glVertex3f( x+.50f, y+5.50f, z-.25f );
@@ -280,18 +279,18 @@ public class CubeSide {
         }
     
     
-      private static void setUpCoordFrames(GL2 gl2){
+      private static void setUpCoordFrames(GL11 gl2){
         //initialize all coord frames
         gl2.glPushMatrix();
-        cfCubeSides = new double[6][16];
-        cfCubes = new ArrayList<double[]>();
+        cfCubeSides = new float[6][16];
+        cfCubes = new ArrayList<float[]>();
         gl2.glLoadIdentity();
         for(int i=0; i<cfCubeSides.length;i++){
-            gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, cfCubeSides[i],0);
+            gl2.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, cfCubeSides[i],0);//TODO: don't know if this works
         }
         for(int i=0; i<40;i++){
-            cfCubes.add(new double[16]);
-            gl2.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, cfCubes.get(i),0);
+            cfCubes.add(new float[16]);
+            gl2.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, cfCubes.get(i),0);
         }
         gl2.glPopMatrix();
         
@@ -328,7 +327,7 @@ public class CubeSide {
     }
       
       
-      public static void init(GL2 gl2){
+      public static void init(GL11 gl2){
         setUpCoordFrames(gl2);
    
         sideList = gl2.glGenLists(1);

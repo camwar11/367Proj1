@@ -2,40 +2,40 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package pkg367proj1;
+package edu.gvsu.cis.proj2;
 
-import com.jogamp.opengl.util.gl2.GLUT;
-import javax.media.opengl.*;
-//import javax.media.opengl.glu.GLU;
-import javax.vecmath.Matrix4f;
+import javax.microedition.khronos.opengles.GL11;
+import static android.opengl.GLES11.*;
+import edu.gvsu.cis.proj3.MeshObject;
+
+import android.content.Context;
+import android.opengl.*;
 
 /**
  *
  * @author warnecam
  */
 public class Teapot extends SceneObj{
-
-    public Teapot(double size, Triple<Float> color){
+	private MeshObject meshObj;
+    public Teapot(Context context, double size){//, Triple<Float> color){
         this.size = size;
-        cf = new Matrix4f();
-        cf.setIdentity();
+        Matrix.setIdentityM(cf, 0);
         this.color = color;
-        
+        meshObj = new MeshObject(context, "chalice.off");
     }
     
     @Override
-    public void draw(GL2 gl){
-        gl.glPushMatrix();
-        gl.glMultMatrixf(Test.cyl.getCFf(), 0);
-        gl.glMultMatrixf(this.getCFf(), 0);
-        GLUT glut = new GLUT();
-        gl.glColor3f(color.R(), color.G(), color.B());
-        glut.glutSolidTeapot(size,false);
-        gl.glPopMatrix();
+    public void draw(){
+        glPushMatrix();
+        glMultMatrixf(Test.cyl.getCF(), 0);
+        glMultMatrixf(this.getCF(), 0);
+        //glColor3f(color.R(), color.G(), color.B());
+        meshObj.draw(null);
+        glPopMatrix();
     }
     
     
-    public static void initMaterial(GL2 gl){
+    public static void initMaterial(GL11 gl){
         /* define material properties */
         float[] material_ambient = new float[]{0.25f, 0.25f, 0.25f};
         float[] material_diffuse = new float[]{0.90f, 0.90f, 0.90f, 0};
@@ -43,10 +43,10 @@ public class Teapot extends SceneObj{
         float material_shininess = 25.0f;
 
         /* load material properties */
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, material_ambient, 0);
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, material_diffuse, 0);
-        gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_SPECULAR, material_specular, 0);
-        gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, material_shininess);
+        gl.glMaterialfv(GL11.GL_FRONT, GL11.GL_AMBIENT, material_ambient, 0);
+        gl.glMaterialfv(GL11.GL_FRONT, GL11.GL_DIFFUSE, material_diffuse, 0);
+        gl.glMaterialfv(GL11.GL_FRONT, GL11.GL_SPECULAR, material_specular, 0);
+        gl.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, material_shininess);
     }
     
 }
