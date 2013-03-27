@@ -1,4 +1,4 @@
-package edu.gvsu.cis.gles;
+package edu.gvsu.cis.proj3;
 
 import static android.opengl.GLES10.*;
 
@@ -8,7 +8,11 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import android.content.Context;
-
+/**
+ * Mesh Object converter taken from Dr. Dulimarta's example
+ * @author dulimarh
+ *
+ */
 public class MeshObject implements Drawable {
     private OffScanner obj;
     private FloatBuffer mVertex, mNormal, mTex;

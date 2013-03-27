@@ -1,4 +1,4 @@
-package edu.gvsu.cis.gles;
+package edu.gvsu.cis.proj3;
 
 import static android.opengl.GLES10.*;
 import android.content.Context;

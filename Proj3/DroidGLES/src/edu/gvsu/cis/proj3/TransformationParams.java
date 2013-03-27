@@ -1,4 +1,4 @@
-package edu.gvsu.cis.gles;
+package edu.gvsu.cis.proj3;
 
 import android.os.Parcel;
 import android.os.Parcelable;

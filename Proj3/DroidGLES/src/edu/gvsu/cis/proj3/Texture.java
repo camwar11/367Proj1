@@ -1,4 +1,4 @@
-package edu.gvsu.cis.gles;
+package edu.gvsu.cis.proj3;
 
 import static android.opengl.GLES11.*;
 
@@ -9,7 +9,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLUtils;
-
+/**
+ * Texture mapping utility taken from Dr. Dulimarta's example
+ * @author dulimarh
+ *
+ */
 public class Texture {
     private int[] id;
     

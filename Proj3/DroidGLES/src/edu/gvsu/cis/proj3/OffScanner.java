@@ -1,4 +1,4 @@
-package edu.gvsu.cis.gles;
+package edu.gvsu.cis.proj3;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +8,11 @@ import android.content.Context;
 import android.util.FloatMath;
 import android.util.Log;
 
+/**
+ * Off file scanner taken from Dr. Dulimarta's example
+ * @author dulimarh
+ *
+ */
 public class OffScanner {
     private final String TAG = getClass().getName();
     private Context ctx;

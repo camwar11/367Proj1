@@ -1,9 +1,11 @@
-package edu.gvsu.cis.gles;
+package edu.gvsu.cis.proj3;
 
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
+
+import edu.gvsu.cis.proj3.R;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
