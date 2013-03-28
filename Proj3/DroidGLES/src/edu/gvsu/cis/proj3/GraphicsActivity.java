@@ -22,12 +22,16 @@ import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-
+/**
+ * Activity to run our program.  Based on Dr. Dulimarta's code with 
+ * a few modifications
+ *
+ */
 public class GraphicsActivity extends Activity {
     private GLView mView;
-    private ToggleButton lighting, accel, anim;
+    private ToggleButton lighting, accel, anim, cake;
     private RadioGroup group;
-    private RadioButton moveLight, moveSphere;
+    private RadioButton moveLight, moveSphere, moveTable;
     private SensorManager sm;
     private Display myDisplay;
     private TransformationParams par;
@@ -45,6 +49,15 @@ public class GraphicsActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
     
+        par = new TransformationParams();
+        par.eyeX = 3f;
+        par.eyeY = -4f;
+        par.eyeZ = 3f;
+        par.litePos[0] = 0f;
+        par.litePos[1] = 0f;
+        par.litePos[2] = 3f;
+        par.droid_x = 2.0f;
+        par.droid_y = 1.0f;
 
         mView = new GLView(this);
         mView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -55,7 +68,7 @@ public class GraphicsActivity extends Activity {
 
         group = (RadioGroup) findViewById(R.id.radiogroup);
         moveLight = (RadioButton) findViewById(R.id.movelight);
-        moveSphere = (RadioButton) findViewById(R.id.moveball);
+        moveSphere = (RadioButton) findViewById(R.id.movechalice);
         lighting = (ToggleButton) findViewById(R.id.tblight);
         lighting.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -67,10 +80,8 @@ public class GraphicsActivity extends Activity {
 		});
         accel = (ToggleButton) findViewById(R.id.tbsensor);
         accel.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                moveSphere.setVisibility(isChecked ? View.GONE : View.VISIBLE);
                 useSensor = isChecked;
             }
         });
@@ -84,6 +95,21 @@ public class GraphicsActivity extends Activity {
             }
         });
         
+        moveTable = (RadioButton)findViewById(R.id.movetable);
+        moveTable.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				render.setMoveTable(isChecked);
+			}
+        });
+        
+        cake = (ToggleButton)findViewById(R.id.cakeButton);
+        cake.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				render.setDrawCake(isChecked);
+			}
+        });
         //technique to replace the dummy view as shown in the example
         View dummy = (View) findViewById(R.id.dummy);
         ViewGroup top = (ViewGroup) dummy.getParent();

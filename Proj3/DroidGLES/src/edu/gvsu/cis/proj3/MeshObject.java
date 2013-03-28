@@ -14,13 +14,18 @@ import android.content.Context;
  *
  */
 public class MeshObject implements Drawable {
-    private OffScanner obj;
+    private ModelScanner obj;
     private FloatBuffer mVertex, mNormal, mTex;
     private ShortBuffer mIndex;
+    private boolean hasNorms = false;
     
-    public MeshObject(Context c, String filename)
+    public MeshObject(Context c, String filename, boolean isObjFile)
     {
-        obj = new OffScanner(c);
+    	if(isObjFile)
+    		obj = new ObjScanner(c);
+    	else
+    		obj = new OffScanner(c);
+    	
         obj.read(filename);
         
         ByteBuffer buff;
@@ -30,10 +35,13 @@ public class MeshObject implements Drawable {
         mVertex = buff.asFloatBuffer();
         mVertex.put(obj.getVertexArray());
         
+        if(obj.getNormalArray() != null){
+        	hasNorms = true;
         buff = ByteBuffer.allocateDirect(4 * obj.getNormalArray().length);
         buff.order(ByteOrder.nativeOrder());
         mNormal = buff.asFloatBuffer();
         mNormal.put(obj.getNormalArray());
+        }
         
         buff = ByteBuffer.allocateDirect(4 * obj.getVertexArray().length * 2 / 3);
         buff.order (ByteOrder.nativeOrder());
@@ -50,7 +58,8 @@ public class MeshObject implements Drawable {
         mIndex.put(obj.getIndexArray());
         
         mVertex.position(0);
-        mNormal.position(0);
+        if(hasNorms)
+        	mNormal.position(0);
         mTex.position(0);
         mIndex.position(0);
     }
@@ -63,6 +72,7 @@ public class MeshObject implements Drawable {
                 GL_FLOAT    /* type of each vertex */, 
                 0           /* stride */,
                 mVertex     /* memory location */);
+        if(hasNorms)
         glNormalPointer(
         		GL_FLOAT, 
         		0 /* stride */, 

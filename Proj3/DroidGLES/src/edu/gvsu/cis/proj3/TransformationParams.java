@@ -3,7 +3,8 @@ package edu.gvsu.cis.proj3;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/* this class is made as a Parcelable class so the object can be
+/* Class from Dr. Dulimarta's example code, slightly modified
+ * this class is made as a Parcelable class so the object can be
  * saved when the activity has to restart
  */
 public class TransformationParams implements Parcelable {
@@ -16,7 +17,7 @@ public class TransformationParams implements Parcelable {
     public float[] litePos = new float[3];
     public float tiltXRot, tiltZRot;
     public float texScale, texTransX, texTransY;
-    public float sphTrX, sphTrY; /* sphere translation amount */
+    public float chaliceTrX, chaliceTrY;
     public float roll_x, roll_y;
     public float eyeX, eyeY, eyeZ;
     public float droid_x, droid_y;
@@ -39,8 +40,8 @@ public class TransformationParams implements Parcelable {
 		dest.writeFloat(texScale);
 		dest.writeFloat(texTransX);
 		dest.writeFloat(texTransY);
-		dest.writeFloat(sphTrX);
-		dest.writeFloat(sphTrY);
+		dest.writeFloat(chaliceTrX);
+		dest.writeFloat(chaliceTrY);
 		dest.writeFloat(roll_x);
 		dest.writeFloat(roll_y);
 		dest.writeFloat(eyeX);

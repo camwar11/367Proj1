@@ -6,35 +6,41 @@ package edu.gvsu.cis.proj1;
 
 import android.content.Context;
 
-import static android.opengl.GLES10.glMultMatrixf;
-import static android.opengl.GLES10.glPopMatrix;
-import static android.opengl.GLES10.glPushMatrix;
+import static android.opengl.GLES10.glTranslatef;
 import static android.opengl.GLES11.*;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import javax.microedition.khronos.opengles.GL11;
 
 import edu.gvsu.cis.proj2.SceneObj;
-import edu.gvsu.cis.proj2.Test;
 import edu.gvsu.cis.proj3.MeshObject;
 
 /**
- *
+ *This is a cake, the texture is not very good though
  * @author Cam Warner, Andrew Zimny, Eric Munson
  */
 public class Cake extends SceneObj{
-	private MeshObject meshObj;
+	public static MeshObject meshObj = null;
+	private static int count = 0;
     public Cake(Context context, double size){//, Triple<Float> color){
         this.size = size;
         Matrix.setIdentityM(cf, 0);
         this.color = color;
-        meshObj = new MeshObject(context, "cake.off");
+        if(meshObj==null) //only load the meshObj if this is the first call
+        {
+        	meshObj = new MeshObject(context, "cake_normals.obj", true);
+        	Log.d("TEST", Integer.toString(count++));
+        }
     }
-    public void draw(){
+    @Override
+    public void draw(Object... objects){
         glPushMatrix();
-        glMultMatrixf(this.getCF(), 0);
+        glTranslatef(0, 0, 0.5f);
+        glScalef(0.1f, 0.1f, 0.1f);
         //glColor3f(color.R(), color.G(), color.B());
-        meshObj.draw(null);
+        glMultMatrixf(cf, 0);
+        Cake.meshObj.draw(null);
         glPopMatrix();
     }
 }

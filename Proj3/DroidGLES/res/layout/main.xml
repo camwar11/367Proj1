@@ -14,6 +14,7 @@
         android:baselineAligned="true"
         android:gravity="center"
         android:orientation="vertical" >
+
         <ToggleButton
             android:id="@+id/tblight"
             android:layout_width="80dp"
@@ -31,14 +32,24 @@
             android:text="@string/sensor"
             android:textOff="@string/sensor"
             android:textOn="@string/sensor" />
+
         <ToggleButton
             android:id="@+id/tbanim"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/dance"
-            android:textOff="@string/dance"
-            android:textOn="@string/dance" />
+            android:text="@string/rotate"
+            android:textOn="@string/rotate" />
+
+        <ToggleButton
+            android:id="@+id/cakeButton"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/cake"
+            android:textOff="@string/cake"
+            android:textOn="@string/cake" />
+
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="wrap_content"
@@ -70,28 +81,33 @@
                         android:layout_height="wrap_content"
                         android:text="@string/movecoa"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
+
                     <RadioButton
-                        android:id="@+id/moveball"
+                        android:id="@+id/movechalice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/moveball"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
+
                     <RadioButton
                         android:id="@+id/movelight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/movelight"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
+
                     <RadioButton
-                        android:id="@+id/movetex"
+                        android:id="@+id/movetable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/movetex"
+                        android:text="@string/movetable"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
+
                 </RadioGroup>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
+
     <TextView
         android:id="@+id/message"
         android:layout_width="wrap_content"
@@ -99,8 +115,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="8dp"
         android:ellipsize="marquee"
-        android:text="1-finger swipe: move XY    2-finger swipe: pinch, zoom, or move Z"
+        android:text="Swipe: to move XY, Tilt to tilt the table"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
     <TextView
         android:id="@+id/dummy"
         android:layout_width="wrap_content"

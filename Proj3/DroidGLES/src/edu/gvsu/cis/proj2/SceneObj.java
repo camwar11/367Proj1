@@ -4,21 +4,20 @@
  */
 package edu.gvsu.cis.proj2;
 
+import edu.gvsu.cis.proj3.Drawable;
 import android.opengl.*;
 
 /**
- *
+ * Base object of a scene that other objects inherit from
  * @author warnecam
  */
-public class SceneObj implements Drawable{
+public abstract class SceneObj implements Drawable{
     protected float[] cf = new float[16];
     protected double size;
     protected float[] color = new float[3];
     
     @Override
-    public void draw() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    public abstract void draw(Object... objects);
     
     public void rotateX(float rot){
         Matrix.rotateM(cf, 0, rot, 1f, 0f, 0f);
@@ -33,7 +32,7 @@ public class SceneObj implements Drawable{
     void globalTranslate(float x, float y, float z) {
     	throw new UnsupportedOperationException("Not supported yet.");
     }
-    void localTranslate(float x, float y, float z) {
+    public void localTranslate(float x, float y, float z) {
         Matrix.translateM(cf, 0, x, y, z);
     }
     

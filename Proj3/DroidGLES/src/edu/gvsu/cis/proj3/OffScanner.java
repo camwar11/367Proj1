@@ -9,11 +9,11 @@ import android.util.FloatMath;
 import android.util.Log;
 
 /**
- * Off file scanner taken from Dr. Dulimarta's example
- * @author dulimarh
+ * Off file scanner adapted from Dr. Dulimarta's example
+ * @author Cam
  *
  */
-public class OffScanner {
+public class OffScanner implements ModelScanner{
     private final String TAG = getClass().getName();
     private Context ctx;
     private float[] vertices, normals;

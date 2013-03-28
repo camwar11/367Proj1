@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="edu/gvsu/cis/proj2/Cylinder.java|edu/gvsu/cis/proj2/Main.java|edu/gvsu/cis/proj2/Test.java|edu/gvsu/cis/proj1/Test.java|edu/gvsu/cis/proj1/CubeSide.java" kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

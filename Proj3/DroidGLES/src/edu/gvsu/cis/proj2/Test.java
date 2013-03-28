@@ -4,21 +4,8 @@
  */
 package edu.gvsu.cis.proj2;
 
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.awt.GLCanvas;
-
-import java.awt.Frame;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
 
 /**
  *

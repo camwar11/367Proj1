@@ -10,9 +10,9 @@ public class Droid implements Drawable {
     
     public Droid (Context context)
     {
-        torso = new MeshObject(context, "cylinder.off");
-        head = new MeshObject(context, "half_sphere.off");
-        arm = new MeshObject(context, "limb.off");
+        //torso = new MeshObject(context, "cylinder.off");
+        //head = new MeshObject(context, "half_sphere.off");
+        //arm = new MeshObject(context, "limb.off");
         headSpin = 0.5f;
         armSpin = -0.5f;
     }

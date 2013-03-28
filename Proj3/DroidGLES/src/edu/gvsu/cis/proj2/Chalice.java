@@ -12,23 +12,28 @@ import android.content.Context;
 import android.opengl.*;
 
 /**
- *
+ * Chalice that will spin
  * @author warnecam
  */
-public class Teapot extends SceneObj{
+public class Chalice extends SceneObj{
 	private MeshObject meshObj;
-    public Teapot(Context context, double size){//, Triple<Float> color){
+    public Chalice(Context context, double size){//, Triple<Float> color){
         this.size = size;
         Matrix.setIdentityM(cf, 0);
-        this.color = color;
-        meshObj = new MeshObject(context, "chalice.off");
+        Matrix.scaleM(cf, 0, 2f, 2f, 2f);
+        
+        //this.localTranslate(0f, -.75f, 0f);
+        meshObj = new MeshObject(context, "chalice.off",false);
     }
     
     @Override
-    public void draw(){
+    public void draw(Object... objects){
+    	float[] multMat = new float[16];
+    	Matrix.rotateM(multMat, 0, cf, 0, 90, 1f, 0, 0);
+    	Matrix.translateM(multMat, 0, 0f, -.5f, 0f);
         glPushMatrix();
-        glMultMatrixf(Test.cyl.getCF(), 0);
-        glMultMatrixf(this.getCF(), 0);
+        //glMultMatrixf(Test.cyl.getCF(), 0);
+        glMultMatrixf(multMat, 0);
         //glColor3f(color.R(), color.G(), color.B());
         meshObj.draw(null);
         glPopMatrix();
