@@ -28,6 +28,7 @@ public class GLRenderer implements Renderer {
     private final float chaliceSize = 0.5f;
 
     SceneObj chalice, cake, table;
+    Ball sphere;
     private Cube[] cubes;
     private Texture wood, cakeTxt, metal;
     private Context mCtx;
@@ -54,6 +55,7 @@ public class GLRenderer implements Renderer {
         moveTable = false;
         chalice = new Chalice(parent, 10.0);
         cake = new Cake(parent, 10.0);
+        sphere = new Ball(parent);
         cubes = new Cube[4];
         for(int i = 0; i < 4; i++){
         	cubes[i] = new Cube(parent);
@@ -130,6 +132,16 @@ public class GLRenderer implements Renderer {
         }
         
         gl.glPopMatrix();
+        boolean intersect = false;
+        for(int i = 0; i < 4; i++){
+        	if(cubes[i].intersects(sphere.getX(), sphere.getY(), (float)sphere.getSize())){
+        		intersect = true;
+        		break;
+        	}
+        }
+        if(!intersect)
+        	sphere.roll(param.chaliceTrX, param.chaliceTrY);
+		sphere.draw(null);
         metal.unbind();
     }
 

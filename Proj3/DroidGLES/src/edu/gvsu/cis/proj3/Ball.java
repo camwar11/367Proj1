@@ -75,4 +75,24 @@ public class Ball extends SceneObj{
 		x+= rollX;
 		y+= rollY;
 	}
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+	
+	public double getSize(){
+		return this.size;
+	}
 }
