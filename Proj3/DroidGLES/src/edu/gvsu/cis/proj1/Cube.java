@@ -15,22 +15,27 @@ import static android.opengl.GLES11.*;
  */
 public class Cube extends SceneObj {
 	private static MeshObject meshObj = null;
-	private float x,y,width,length;
+	private float x,y;
+	public float width;
+	public float length;
 	private static float[][] colors = {{.7f,0f,0f},{0f,.7f,0f}};//red, green
 	private int color, score;
 	private long oldTime, changeTime;
+	private int numDrawn = 0;
+	public boolean moving = true;
 	public Cube(Context con){
 		Matrix.setIdentityM(cf, 0);
 		if(meshObj == null) //only load the object once
 			meshObj = new MeshObject(con,"cube.obj",true);
-		size = .5;
-		width = .5f;
-		length = .5f;
-		move();
+		size = .75;
+		width = .75f;
+		length = .75f;
+		color = 1;//green is the default color
 	}
 	@Override
 	public void draw(Object... objects) {
-		if(System.currentTimeMillis() >= this.changeTime){
+		numDrawn = numDrawn % 100 + 1; // only check every 100 draws for performance
+		if(numDrawn == 100 && System.currentTimeMillis() >= this.changeTime){
 			move();
 		}
 		glPushMatrix();
@@ -85,9 +90,14 @@ public class Cube extends SceneObj {
 	 * Randomly moves the cube and assigns it a new color
 	 */
 	public int move() {
+		if(!moving){//only using this for the background cube so color it green
+			color = 1;
+			return 0;
+		}
 		int oldScore = this.score;
 		this.oldTime = System.currentTimeMillis();
 		this.changeTime = this.oldTime + 1000 * 8;//8 secs
+		numDrawn = 0;
 		color = (int) Math.round(Math.random());//0 or 1, ie red or green
 		if(color == 0 ){
 			score = -5;

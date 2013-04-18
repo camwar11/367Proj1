@@ -20,15 +20,18 @@ public final class R {
     }
     public static final class id {
         public static final int RelativeLayout1=0x7f050000;
-        public static final int TextView01=0x7f050005;
+        public static final int TextView01=0x7f050006;
         public static final int controlbox=0x7f050001;
-        public static final int dummy=0x7f050009;
-        public static final int message=0x7f050008;
-        public static final int radiogroup=0x7f050007;
-        public static final int score=0x7f050006;
-        public static final int scrollView1=0x7f050004;
-        public static final int tblight=0x7f050002;
-        public static final int tbsensor=0x7f050003;
+        public static final int dummy=0x7f05000a;
+        public static final int gameOver=0x7f05000b;
+        public static final int gameOverScore=0x7f05000c;
+        public static final int message=0x7f050009;
+        public static final int newGameButton=0x7f050002;
+        public static final int radiogroup=0x7f050008;
+        public static final int score=0x7f050007;
+        public static final int scrollView1=0x7f050005;
+        public static final int tblight=0x7f050003;
+        public static final int tbsensor=0x7f050004;
     }
     public static final class layout {
         public static final int main=0x7f030000;
@@ -43,6 +46,7 @@ public final class R {
         public static final int moveeye=0x7f040007;
         public static final int movelight=0x7f040005;
         public static final int movetable=0x7f040002;
+        public static final int newGame=0x7f04000b;
         public static final int rotate=0x7f040009;
         public static final int sensor=0x7f040004;
     }

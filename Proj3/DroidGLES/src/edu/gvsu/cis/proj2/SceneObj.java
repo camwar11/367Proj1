@@ -13,7 +13,7 @@ import android.opengl.*;
  */
 public abstract class SceneObj implements Drawable{
     protected float[] cf = new float[16];
-    protected double size;
+    public double size;
     protected float[] color = new float[3];
     
     @Override

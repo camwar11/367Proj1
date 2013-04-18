@@ -16,6 +16,14 @@
         android:orientation="vertical" >
         <LinearLayout android:layout_width="wrap_content" android:id="@+id/controlbox" android:layout_height="match_parent" android:layout_marginBottom="0dp" android:baselineAligned="true" android:gravity="center" android:orientation="vertical">
 
+            <Button
+                android:id="@+id/newGameButton"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/newGame"
+                android:text="@string/newGame"
+                android:visibility="gone" />
+
             <ToggleButton
                 android:id="@+id/tblight"
                 android:layout_width="80dp"
@@ -93,7 +101,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="8dp"
         android:ellipsize="marquee"
-        android:text="Green cubes are 10 pts.  Red cubes are -5 pts."
+        android:text="Green cubes are 10 pts.  Red cubes are -5 pts. Games last 1 min."
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -105,4 +113,33 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@id/controlbox"
         android:text="@string/hello" />
+
+    <EditText
+        android:id="@+id/gameOver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gameOverScore"
+        android:layout_alignLeft="@+id/gameOverScore"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Game Over! Score:"
+        android:visibility="visible" />
+
+    <EditText
+        android:id="@+id/gameOverScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/controlbox"
+        android:clickable="false"
+        android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:longClickable="false"
+        android:visibility="visible" >
+
+        <requestFocus />
+    </EditText>
+
 </RelativeLayout>

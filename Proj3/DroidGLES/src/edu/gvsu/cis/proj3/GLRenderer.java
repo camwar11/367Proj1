@@ -1,6 +1,10 @@
 package edu.gvsu.cis.proj3;
 
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -13,6 +17,7 @@ import edu.gvsu.cis.proj3.R;
 import android.content.Context;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -25,19 +30,18 @@ import android.view.Surface;
  */
 public class GLRenderer implements Renderer {
     private final String TAG = getClass().getName();
-    private final float chaliceSize = 0.5f;
     private int score = 0;
-    SceneObj chalice, cake, table;
+    SceneObj table;
     Ball sphere;
     private Cube[] cubes;
     private Texture wood, cakeTxt, metal;
     private Context mCtx;
-    private boolean isLandscape, isPinching, lighting, moveTable;
+    private boolean isLandscape, lighting;
     private float ratio;
     private TransformationParams param;
     private float prevX, prevY, prevDist;
     private int scrWidth, scrHeight;
-    
+	private  boolean gameOver = false;
     private final static float lightAmb[] = {0.4f, 0.4f, 0.4f, 1f};
     private final static float lightDif[] = {.5f, .5f, .5f, 1f};
     private final static float lightPos[] = {0f, 0f, 10f, 1f};
@@ -45,16 +49,11 @@ public class GLRenderer implements Renderer {
     private final static float materialAmb[] = {0.4f, 0.4f, 0.48f, .5f};
     private final static float materialSpe[] = {0.2f, .2f, .2f, .5f};
     private boolean anim;
-	private boolean drawCake;
-    
+    private Cube bgCube;
     public GLRenderer(Context parent, TransformationParams p)
     {
         mCtx = parent;
         anim = false;
-        drawCake = false;
-        moveTable = false;
-        //chalice = new Chalice(parent, 10.0);
-        //cake = new Cake(parent, 10.0);
         sphere = new Ball(parent);
         cubes = new Cube[4];
         for(int i = 0; i < 4; i++){
@@ -67,14 +66,25 @@ public class GLRenderer implements Renderer {
         /* initialize transformation variables */
         param = p;
         lighting = true;
+        //init background cube
+        bgCube = new Cube(parent);
+        bgCube.setX(-10);
+        bgCube.setY(-10);
+        bgCube.size = 1;
+        bgCube.width = 70;
+        bgCube.length = 30;
+        bgCube.moving = false;
+        bgCube.localTranslate(0f, .5f, -3f);
     }
     
     @Override
     public synchronized void onDrawFrame(GL10 gl) { 
-    	if(gameOver)
+    	if(gameOver){
+    		GraphicsActivity.gameOver();
     		return;
+    	}
         // display function
-        gl.glClearColor (0, 0, 0, 1f);
+        gl.glClearColor (0, 0, .6f, .5f);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         gl.glEnable(GL10.GL_COLOR_MATERIAL);
         gl.glLoadIdentity();
@@ -88,6 +98,17 @@ public class GLRenderer implements Renderer {
         gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_SPOT_DIRECTION, lightDir, 0);
         gl.glPopMatrix();
         
+        /////////////////////////////
+        gl.glPushMatrix();
+
+        cakeTxt.bind();
+        gl.glColor4f(0f, .4f, 0f, .5f);
+        //gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+        bgCube.draw(null);
+        cakeTxt.unbind();
+        gl.glPopMatrix();
+        /////////////////
+        
         if (lighting)
         	gl.glEnable(GL10.GL_LIGHTING);
         else
@@ -95,6 +116,7 @@ public class GLRenderer implements Renderer {
         
         //draw the table
         wood.bind();
+        gl.glColor4f(.4f, .4f, .4f, 1f);
         gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 		table.draw(anim);
 		wood.unbind();
@@ -114,7 +136,7 @@ public class GLRenderer implements Renderer {
         		break;
         	}
         }
-        sphere.roll(param.chaliceTrX, param.chaliceTrY);
+        sphere.roll(param.ballTrX, param.ballTrY);
         //greyish metal
         gl.glColor4f(.4f, .4f, .4f, 1f);
 		sphere.draw(null);
@@ -167,12 +189,12 @@ public class GLRenderer implements Renderer {
 
         //init our textures
         wood = new Texture (mCtx, R.drawable.wood);
-        cakeTxt = new Texture (mCtx, R.drawable.cake);
+        cakeTxt = new Texture (mCtx, R.drawable.grass);
         metal = new Texture (mCtx, R.drawable.metal);
     }
  
     //example modified only move the ball
-    public void doSwipe(MotionEvent ev, int which)
+    public void doSwipe(MotionEvent ev)
     {
         switch (ev.getAction() & MotionEvent.ACTION_MASK)
         {
@@ -181,28 +203,27 @@ public class GLRenderer implements Renderer {
             prevY = ev.getY();
             break;
         case MotionEvent.ACTION_MOVE:
-            float tx = .2f * (isLandscape ? ratio : 1.0f) * (ev.getX() - prevX) / scrWidth;
-            float ty = .2f * (isLandscape ? 1.0f : ratio) * (prevY - ev.getY()) / scrHeight;
+            float tx = .7f * (isLandscape ? ratio : 1.0f) * (ev.getX() - prevX) / scrWidth; //phone is at .5
+            float ty = .7f * (isLandscape ? 1.0f : ratio) * (prevY - ev.getY()) / scrHeight; //phone is at .5
 
-            param.chaliceTrX += tx; 
-            param.chaliceTrY += ty;
+            param.ballTrX -= tx; //negative because the controls were backwards
+            param.ballTrY -= ty;
                 
-            //prevX = ev.getX();
-            //prevY = ev.getY();
+//            prevX = ev.getX();
+  //          prevY = ev.getY();
             break;
         case MotionEvent.ACTION_UP:
         }
     }
     
-    public void doPinch (MotionEvent ev, int which)
+    public void doPinch (MotionEvent ev)
     {
         //don't handle pinching
     }
 
     private long tstamp;
-	private boolean gameOver;
     
-    //example modified to tilt the table
+    //example modified to move the ball
     void doTilt (float[] grav, long timestamp, int orient)
     {
         float len = grav[0] * grav[0] + grav[1] * grav[1];
@@ -252,8 +273,8 @@ public class GLRenderer implements Renderer {
             /* event time stamp is in nano second, we want to convert 
              * it to second */
             final float dt = (timestamp - tstamp) / 1e9f;
-            param.chaliceTrX = 60 * gravity_x * dt * dt*dt;//rotates the table
-            param.chaliceTrY = 60 * gravity_y * dt * dt*dt;
+            param.ballTrX =- 80 * gravity_x * dt * dt*dt;//moves the ball (negative because the controls were backwards)
+            param.ballTrY =- 80 * gravity_y * dt * dt*dt;
         }
         tstamp = timestamp;
     	
@@ -268,18 +289,18 @@ public class GLRenderer implements Renderer {
         anim = flag;
     }
 
-	public void setMoveTable(boolean isChecked) {
-		moveTable = isChecked;
-		
-	}
-	public void setDrawCake(boolean draw){
-		this.drawCake = draw;
-	}
-	public void gameOver(){
-		this.gameOver = true;
-	}
 	public void reset(){
+		this.gameOver = false;
 		this.score = 0;
+		
+		//cool little way to limit the game time
+		final Runnable r = new Runnable(){
+			public void run(){
+				GLRenderer.this.gameOver = true;
+			}
+		};
+		Handler h = new Handler();
+		h.postDelayed(r, 1000*60); //1 min game
 	}
 }
 

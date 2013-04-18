@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, GraphicsActivity!</string>
-    <string name="app_name">Project 3</string>
+    <string name="app_name">Project 4</string>
     <string name="movetable">Table</string>
     <string name="lighting">Lighting</string>
     <string name="sensor">Accel.</string>
@@ -11,4 +11,5 @@
     <string name="movecoa">LookAt</string>
     <string name="rotate">Rotate</string>
     <string name="cake">Cake</string>
+    <string name="newGame">New Game</string>
 </resources>

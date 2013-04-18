@@ -18,7 +18,7 @@ public class TransformationParams implements Parcelable {
     public float[] litePos = new float[3];
     public float tiltXRot, tiltZRot;
     public float texScale, texTransX, texTransY;
-    public float chaliceTrX, chaliceTrY;
+    public float ballTrX, ballTrY;
     public float roll_x, roll_y;
     public float eyeX, eyeY, eyeZ;
     public float droid_x, droid_y;
@@ -42,8 +42,8 @@ public class TransformationParams implements Parcelable {
 		dest.writeFloat(texScale);
 		dest.writeFloat(texTransX);
 		dest.writeFloat(texTransY);
-		dest.writeFloat(chaliceTrX);
-		dest.writeFloat(chaliceTrY);
+		dest.writeFloat(ballTrX);
+		dest.writeFloat(ballTrY);
 		dest.writeFloat(roll_x);
 		dest.writeFloat(roll_y);
 		dest.writeFloat(eyeX);

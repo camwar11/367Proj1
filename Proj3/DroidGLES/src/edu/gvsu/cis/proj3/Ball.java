@@ -9,7 +9,7 @@ public class Ball extends SceneObj{
 	private float  x, y, prevX, prevY;
 	private float rollX, rollY;
 	private MeshObject meshObj;
-	public static int bounds = 10;
+	public static int bounds = 9;
 	public Ball(Context con){
 		Matrix.setIdentityM(cf, 0);
 		meshObj = new MeshObject(con, "sphere.off", false);
@@ -19,10 +19,6 @@ public class Ball extends SceneObj{
 	
 	//This makes the ball roll naturally, adapted from Dr. Dulimarta's code
 	public void render(){
-		//if(Math.abs(x-prevX)>rollX){
-		//	rollX = 0;
-		//	rollY = 0;
-		//}
 		/* (rollX, rollY) is the direction where the sphere is supposed to roll */
         double rollDist = Math.sqrt(rollX * rollX + 
         		rollY * rollY);
@@ -45,8 +41,6 @@ public class Ball extends SceneObj{
 			glMultMatrixf(cf, 0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, cf, 0);
 			glPopMatrix();
-			//Log.d("", "Ball (" + x + "," + y + ")"+
-	        //    " rollx=" + rollX + " rolly=" +rollY);
         }
 
         glPushMatrix();

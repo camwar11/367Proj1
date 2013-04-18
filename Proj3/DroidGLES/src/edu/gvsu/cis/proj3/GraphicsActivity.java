@@ -13,10 +13,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -31,16 +34,15 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
  */
 public class GraphicsActivity extends Activity {
     private GLView mView;
-    private ToggleButton lighting, accel, anim, cake;
-    private RadioGroup group;
-    private RadioButton moveLight, moveSphere, moveTable;
+    private ToggleButton lighting, accel, gameOverButton;
     private SensorManager sm;
     private Display myDisplay;
     private TransformationParams par;
     private GLRenderer render;
     private boolean useSensor;
-    private static TextView scoreText;
+    private static TextView scoreText, gameOverScore, gameOver;
     private static Activity thisActivity;
+	private static Button newGameButton;
     
     /** Called when the activity is first created. */
     @Override
@@ -55,8 +57,8 @@ public class GraphicsActivity extends Activity {
     
         par = new TransformationParams();
         par.eyeX = 0f;
-        par.eyeY = 0f;
-        par.eyeZ = 25f;
+        par.eyeY = 20f;
+        par.eyeZ = 15f;
         par.litePos[0] = 0f;
         par.litePos[1] = 0f;
         par.litePos[2] = 15f;
@@ -70,8 +72,17 @@ public class GraphicsActivity extends Activity {
         setContentView(R.layout.main);
 
         scoreText = (TextView) findViewById(R.id.score);
+        gameOver = (TextView) findViewById(R.id.gameOver);
+        gameOverScore = (TextView) findViewById(R.id.gameOverScore);
+        newGameButton = (Button)findViewById(R.id.newGameButton);
         
-        group = (RadioGroup) findViewById(R.id.radiogroup);
+        newGameButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				newGame();	
+			}
+        });
+        
         lighting = (ToggleButton) findViewById(R.id.tblight);
         lighting.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -87,6 +98,7 @@ public class GraphicsActivity extends Activity {
                 useSensor = isChecked;
             }
         });
+        
         //technique to replace the dummy view as shown in the example
         View dummy = (View) findViewById(R.id.dummy);
         ViewGroup top = (ViewGroup) dummy.getParent();
@@ -95,6 +107,7 @@ public class GraphicsActivity extends Activity {
         int idx = top.indexOfChild(dummy);
         top.removeViewAt(idx);
         top.addView (mView, idx);
+        newGame();
     }
 
     
@@ -145,10 +158,10 @@ public class GraphicsActivity extends Activity {
                 @Override
                 public void run() {
                     if (event.getPointerCount() == 1) {
-                    	render.doSwipe(event, group.getCheckedRadioButtonId());
+                    	render.doSwipe(event);
                     }
                     else if (event.getPointerCount() >= 2) {
-                    	render.doPinch(event, group.getCheckedRadioButtonId());
+                    	render.doPinch(event);
                     }
                     /* when the current render mode is "WHEN_DIRTY", the
                      * following call to requestRender() is necessary */
@@ -183,6 +196,7 @@ public class GraphicsActivity extends Activity {
             
         }
     };
+
     /**
      * Ugly hack so that the renderer can update the score
      * @param text
@@ -194,4 +208,21 @@ public class GraphicsActivity extends Activity {
     		}
     	});
     }
+    public static void gameOver(){
+    	thisActivity.runOnUiThread(new Runnable(){
+    		public void run(){
+    			gameOver.setVisibility(View.VISIBLE);
+    			gameOverScore.setText(scoreText.getText());
+    			gameOverScore.setVisibility(View.VISIBLE);
+    			newGameButton.setVisibility(View.VISIBLE);
+    		}
+    	});
+    }
+    public void newGame(){
+		render.reset();
+		gameOver.setVisibility(View.GONE);
+		gameOverScore.setVisibility(View.GONE);
+		newGameButton.setVisibility(View.GONE);
+    }
+    
 }
