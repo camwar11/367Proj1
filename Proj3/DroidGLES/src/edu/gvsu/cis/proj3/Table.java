@@ -19,14 +19,8 @@ public class Table extends SceneObj {
 	}
 	@Override
 	public void draw(Object... objects) {
-		boolean rotate = false;
-		if(objects.length==1){
-			rotate = (Boolean)objects[0];
-		}
-		if(rotate)
-			this.rotateZ(2f);//rotate if we should
 		float[] mulMat = new float[16];
-		Matrix.scaleM(mulMat, 0, cf, 0, 7f, 7f, 7f);
+		Matrix.scaleM(mulMat, 0, cf, 0, 25f, 25f, 7f);
 		Matrix.translateM(mulMat, 0, -.475f, .5f, -.5f);
 		Matrix.rotateM(mulMat, 0, 90f, 1f, 0f, 0f);
 		glPushMatrix();

@@ -26,7 +26,7 @@ import android.view.Surface;
 public class GLRenderer implements Renderer {
     private final String TAG = getClass().getName();
     private final float chaliceSize = 0.5f;
-
+    private int score = 0;
     SceneObj chalice, cake, table;
     Ball sphere;
     private Cube[] cubes;
@@ -40,8 +40,8 @@ public class GLRenderer implements Renderer {
     
     private final static float lightAmb[] = {0.4f, 0.4f, 0.4f, 1f};
     private final static float lightDif[] = {.5f, .5f, .5f, 1f};
-    private final static float lightPos[] = {0f, -.5f, 5.0f, 1f};
-    private final static float lightDir[] = {0f, .5f, -1f, 0f};
+    private final static float lightPos[] = {0f, 0f, 10f, 1f};
+    private final static float lightDir[] = {0f, 0f, -1f, 1f};
     private final static float materialAmb[] = {0.4f, 0.4f, 0.48f, .5f};
     private final static float materialSpe[] = {0.2f, .2f, .2f, .5f};
     private boolean anim;
@@ -50,17 +50,16 @@ public class GLRenderer implements Renderer {
     public GLRenderer(Context parent, TransformationParams p)
     {
         mCtx = parent;
-        anim = true;
+        anim = false;
         drawCake = false;
         moveTable = false;
-        chalice = new Chalice(parent, 10.0);
-        cake = new Cake(parent, 10.0);
+        //chalice = new Chalice(parent, 10.0);
+        //cake = new Cake(parent, 10.0);
         sphere = new Ball(parent);
         cubes = new Cube[4];
         for(int i = 0; i < 4; i++){
         	cubes[i] = new Cube(parent);
-        	cubes[i].rotateZ(i*90f);
-        	cubes[i].localTranslate(4f, 0f, 0f);
+        	cubes[i].move();
         }
         
         table = new Table(parent);
@@ -72,6 +71,8 @@ public class GLRenderer implements Renderer {
     
     @Override
     public synchronized void onDrawFrame(GL10 gl) { 
+    	if(gameOver)
+    		return;
         // display function
         gl.glClearColor (0, 0, 0, 1f);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
@@ -79,7 +80,7 @@ public class GLRenderer implements Renderer {
         gl.glLoadIdentity();
         GLU.gluLookAt(gl, param.eyeX, param.eyeY, param.eyeZ, /* eye */ 
                 param.coa[0], param.coa[1], param.coa[2], /* focal point */
-                0, 0, 1f); /* up */
+                0, -1f, 0); /* up */
         gl.glColor4f(1.0f, 1.0f, 1.0f, .1f);
         gl.glPushMatrix();
         gl.glTranslatef(param.litePos[0], param.litePos[1], param.litePos[2]);
@@ -95,52 +96,27 @@ public class GLRenderer implements Renderer {
         //draw the table
         wood.bind();
         gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
-        if(moveTable){
-        	table.rotateX(param.roll_x*100);
-        	table.rotateY(param.roll_y*100);
-        }
 		table.draw(anim);
 		wood.unbind();
         
-		if(drawCake){
-			gl.glPushMatrix();
-			//brown
-			gl.glColor4f(150/255f, 75/255f, 0/255f, 1f);
-			gl.glTranslatef(0, 0, 1);
-			cakeTxt.bind();
-			cake.draw(null);
-			cakeTxt.unbind();
-			gl.glPopMatrix();
-		}
-        
-		gl.glPushMatrix();
-		gl.glTranslatef(param.chaliceTrX, param.chaliceTrY, 0.5f);//move the chalice
-		gl.glScalef(chaliceSize, chaliceSize, chaliceSize);
         metal.bind();
-        //gold metal
-        gl.glColor4f(1f, 215/255f, 0f, 1);
-        gl.glMultMatrixf(table.getCF(), 0);//make the chalice move with the table
-		chalice.draw();
-        gl.glPopMatrix();
         
         gl.glPushMatrix();
-        //greyish metal
-        gl.glColor4f(.4f, .4f, .4f, 1f);
-        gl.glMultMatrixf(table.getCF(), 0);//make the cubes move with the table
         for(int i = 0; i < 4; i++){
         	cubes[i].draw(anim);
         }
-        
+      
         gl.glPopMatrix();
-        boolean intersect = false;
         for(int i = 0; i < 4; i++){
         	if(cubes[i].intersects(sphere.getX(), sphere.getY(), (float)sphere.getSize())){
-        		intersect = true;
+        		score += cubes[i].move();
+        		GraphicsActivity.changeScoreText(""+score);
         		break;
         	}
         }
-        if(!intersect)
-        	sphere.roll(param.chaliceTrX, param.chaliceTrY);
+        sphere.roll(param.chaliceTrX, param.chaliceTrY);
+        //greyish metal
+        gl.glColor4f(.4f, .4f, .4f, 1f);
 		sphere.draw(null);
         metal.unbind();
     }
@@ -176,13 +152,13 @@ public class GLRenderer implements Renderer {
         gl.glEnable(GL10.GL_LIGHT0);
         gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_AMBIENT, lightAmb, 0);
         gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_DIFFUSE, lightDif, 0);
-        gl.glLightf(GL10.GL_LIGHT0, GL10.GL_SPOT_CUTOFF, 20);
+        gl.glLightf(GL10.GL_LIGHT0, GL10.GL_SPOT_CUTOFF, 25);
         gl.glLightf(GL10.GL_LIGHT0, GL10.GL_SPOT_EXPONENT, 1);
         
         gl.glLightModelfv(GL10.GL_LIGHT_MODEL_AMBIENT, lightAmb,0);
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_AMBIENT_AND_DIFFUSE, materialAmb, 0);
         gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, materialSpe, 0);
-        gl.glMaterialf(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, .1f);
+        gl.glMaterialf(GL10.GL_FRONT_AND_BACK, GL10.GL_SHININESS, .5f);
         gl.glEnable(GL10.GL_COLOR_MATERIAL);
         
         gl.glEnable(GL10.GL_TEXTURE_2D);
@@ -195,7 +171,7 @@ public class GLRenderer implements Renderer {
         metal = new Texture (mCtx, R.drawable.metal);
     }
  
-    //example slightly modified to move the chalice instead of a ball
+    //example modified only move the ball
     public void doSwipe(MotionEvent ev, int which)
     {
         switch (ev.getAction() & MotionEvent.ACTION_MASK)
@@ -205,78 +181,26 @@ public class GLRenderer implements Renderer {
             prevY = ev.getY();
             break;
         case MotionEvent.ACTION_MOVE:
-            float tx = 2 * (isLandscape ? ratio : 1.0f) * (ev.getX() - prevX) / scrWidth;
-            float ty = 2 * (isLandscape ? 1.0f : ratio) * (prevY - ev.getY()) / scrHeight;
-            switch (which) {
-            case R.id.movelight:
-                param.litePos[0] += tx;
-                param.litePos[1] += ty;
-                break;
-            case R.id.movetable:
-                param.roll_x = tx;
-                param.roll_y = ty;
-                break;
-            case R.id.movechalice:
-                param.chaliceTrX += tx; 
-                param.chaliceTrY += ty;
-                break;
-            case R.id.moveeye:
-                param.eyeX += tx;
-                param.eyeY += ty;
-                break;
-            case R.id.movefocus:
-                param.coa[0] += tx;
-                param.coa[1] += ty;
-            }
-            prevX = ev.getX();
-            prevY = ev.getY();
+            float tx = .2f * (isLandscape ? ratio : 1.0f) * (ev.getX() - prevX) / scrWidth;
+            float ty = .2f * (isLandscape ? 1.0f : ratio) * (prevY - ev.getY()) / scrHeight;
+
+            param.chaliceTrX += tx; 
+            param.chaliceTrY += ty;
+                
+            //prevX = ev.getX();
+            //prevY = ev.getY();
             break;
         case MotionEvent.ACTION_UP:
         }
     }
     
-    //example from class
     public void doPinch (MotionEvent ev, int which)
     {
-        /* two fingers are pressed */
-        float dx, dy, currDist;
-
-        switch (ev.getAction() & MotionEvent.ACTION_MASK) {
-        case MotionEvent.ACTION_POINTER_DOWN:
-            switch (which) {
-            case R.id.moveeye:
-            case R.id.movelight:
-            case R.id.movefocus:
-                prevX = ev.getX(0);
-                prevY = ev.getY(0);
-            }
-            break;
-        case MotionEvent.ACTION_POINTER_UP:
-            isPinching = false;
-            break;
-        case MotionEvent.ACTION_MOVE:
-            float tx = (ev.getX(0) - prevX) / scrWidth;
-            float ty = (prevY - ev.getY(0)) / scrHeight;
-            switch (which) {
-            case R.id.moveeye:
-                param.eyeZ += 2 * (tx + ty);
-                break;
-            case R.id.movefocus:
-                param.coa[2] += 2 * (tx + ty);
-                break;
-            case R.id.movelight:
-                param.litePos[2] += 2 * (tx + ty);
-                break;
-            }
-            prevX = ev.getX(0);
-            prevY = ev.getY(0);
-            break;
-        default:
-            break;
-        }    	
+        //don't handle pinching
     }
 
     private long tstamp;
+	private boolean gameOver;
     
     //example modified to tilt the table
     void doTilt (float[] grav, long timestamp, int orient)
@@ -328,8 +252,8 @@ public class GLRenderer implements Renderer {
             /* event time stamp is in nano second, we want to convert 
              * it to second */
             final float dt = (timestamp - tstamp) / 1e9f;
-            param.roll_x = 5 * gravity_x * dt * dt*dt;//rotates the table
-            param.roll_y = 5 * gravity_y * dt * dt*dt;
+            param.chaliceTrX = 60 * gravity_x * dt * dt*dt;//rotates the table
+            param.chaliceTrY = 60 * gravity_y * dt * dt*dt;
         }
         tstamp = timestamp;
     	
@@ -350,6 +274,12 @@ public class GLRenderer implements Renderer {
 	}
 	public void setDrawCake(boolean draw){
 		this.drawCake = draw;
+	}
+	public void gameOver(){
+		this.gameOver = true;
+	}
+	public void reset(){
+		this.score = 0;
 	}
 }
 

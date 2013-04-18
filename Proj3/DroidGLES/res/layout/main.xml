@@ -14,6 +14,26 @@
         android:baselineAligned="true"
         android:gravity="center"
         android:orientation="vertical" >
+        <LinearLayout android:layout_width="wrap_content" android:id="@+id/controlbox" android:layout_height="match_parent" android:layout_marginBottom="0dp" android:baselineAligned="true" android:gravity="center" android:orientation="vertical">
+
+            <ToggleButton
+                android:id="@+id/tblight"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/lighting"
+                android:textOff="@string/lighting"
+                android:textOn="@string/lighting" />
+
+            <ToggleButton android:id="@+id/tbsensor" android:layout_width="80dp" android:layout_height="wrap_content" android:checked="false" android:hint="@string/sensor" android:text="@string/sensor" android:textOff="@string/sensor" android:textOn="@string/sensor"/>
+            <ScrollView android:layout_width="wrap_content" android:id="@+id/scrollView1" android:layout_height="wrap_content">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+                    <TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Score:"/>
+                    <TextView android:id="@+id/score" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:ignore="NewApi" android:textColorHint="@android:color/holo_green_light"/>
+                    <RadioGroup android:id="@+id/radiogroup" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical"></RadioGroup>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
 
         <ToggleButton
             android:id="@+id/tblight"
@@ -33,23 +53,6 @@
             android:textOff="@string/sensor"
             android:textOn="@string/sensor" />
 
-        <ToggleButton
-            android:id="@+id/tbanim"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/rotate"
-            android:textOn="@string/rotate" />
-
-        <ToggleButton
-            android:id="@+id/cakeButton"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/cake"
-            android:textOff="@string/cake"
-            android:textOn="@string/cake" />
-
         <ScrollView
             android:id="@+id/scrollView1"
             android:layout_width="wrap_content"
@@ -58,50 +61,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
+
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/TextView01"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Move:" />
+                    android:text="Score:" />
+
+                <TextView
+                    android:id="@+id/score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@android:color/holo_green_light"
+                    tools:ignore="NewApi" />
+
                 <RadioGroup
                     android:id="@+id/radiogroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
-                    <RadioButton
-                        android:id="@+id/moveeye"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/moveeye"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-                    <RadioButton
-                        android:id="@+id/movefocus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movecoa"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <RadioButton
-                        android:id="@+id/movechalice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/moveball"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <RadioButton
-                        android:id="@+id/movelight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movelight"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <RadioButton
-                        android:id="@+id/movetable"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/movetable"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </RadioGroup>
             </LinearLayout>
@@ -115,7 +93,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="8dp"
         android:ellipsize="marquee"
-        android:text="Swipe: to move XY, Tilt to tilt the table"
+        android:text="Green cubes are 10 pts.  Red cubes are -5 pts."
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView

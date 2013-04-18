@@ -10,6 +10,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.RadioGroup;
 import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -37,12 +39,14 @@ public class GraphicsActivity extends Activity {
     private TransformationParams par;
     private GLRenderer render;
     private boolean useSensor;
+    private static TextView scoreText;
+    private static Activity thisActivity;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+        thisActivity = this;
         // remove the title and status bars to make it full screen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -50,32 +54,30 @@ public class GraphicsActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
     
         par = new TransformationParams();
-        par.eyeX = 3f;
-        par.eyeY = -4f;
-        par.eyeZ = 3f;
+        par.eyeX = 0f;
+        par.eyeY = 0f;
+        par.eyeZ = 25f;
         par.litePos[0] = 0f;
         par.litePos[1] = 0f;
-        par.litePos[2] = 3f;
-        par.droid_x = 2.0f;
-        par.droid_y = 1.0f;
-
+        par.litePos[2] = 15f;
+        
         mView = new GLView(this);
         mView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-
+      
+        
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         myDisplay = getWindowManager().getDefaultDisplay();
         setContentView(R.layout.main);
 
+        scoreText = (TextView) findViewById(R.id.score);
+        
         group = (RadioGroup) findViewById(R.id.radiogroup);
-        moveLight = (RadioButton) findViewById(R.id.movelight);
-        moveSphere = (RadioButton) findViewById(R.id.movechalice);
         lighting = (ToggleButton) findViewById(R.id.tblight);
         lighting.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				render.setLighting(isChecked);
-				moveLight.setVisibility(isChecked ? View.VISIBLE : View.GONE);
 			}
 		});
         accel = (ToggleButton) findViewById(R.id.tbsensor);
@@ -84,31 +86,6 @@ public class GraphicsActivity extends Activity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 useSensor = isChecked;
             }
-        });
-        
-        anim = (ToggleButton)findViewById(R.id.tbanim);
-        anim.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                render.setAnimation(isChecked);
-            }
-        });
-        
-        moveTable = (RadioButton)findViewById(R.id.movetable);
-        moveTable.setOnCheckedChangeListener(new OnCheckedChangeListener(){
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				render.setMoveTable(isChecked);
-			}
-        });
-        
-        cake = (ToggleButton)findViewById(R.id.cakeButton);
-        cake.setOnCheckedChangeListener(new OnCheckedChangeListener(){
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				render.setDrawCake(isChecked);
-			}
         });
         //technique to replace the dummy view as shown in the example
         View dummy = (View) findViewById(R.id.dummy);
@@ -206,4 +183,15 @@ public class GraphicsActivity extends Activity {
             
         }
     };
+    /**
+     * Ugly hack so that the renderer can update the score
+     * @param text
+     */
+    public static void changeScoreText(final String text){
+    	thisActivity.runOnUiThread(new Runnable(){
+    		public void run(){
+    			scoreText.setText(text);
+    		}
+    	});
+    }
 }

@@ -9,7 +9,7 @@ public class Ball extends SceneObj{
 	private float  x, y, prevX, prevY;
 	private float rollX, rollY;
 	private MeshObject meshObj;
-	
+	public static int bounds = 10;
 	public Ball(Context con){
 		Matrix.setIdentityM(cf, 0);
 		meshObj = new MeshObject(con, "sphere.off", false);
@@ -45,8 +45,8 @@ public class Ball extends SceneObj{
 			glMultMatrixf(cf, 0);
 			glGetFloatv(GL_MODELVIEW_MATRIX, cf, 0);
 			glPopMatrix();
-			Log.d("", "Ball (" + x + "," + y + ")"+
-	            " dx=" + rollX + " dy=" +rollY);
+			//Log.d("", "Ball (" + x + "," + y + ")"+
+	        //    " rollx=" + rollX + " rolly=" +rollY);
         }
 
         glPushMatrix();
@@ -66,10 +66,10 @@ public class Ball extends SceneObj{
 		rollX = distX;
 		rollY = distY;
 		
-		if((x < -1 && rollX < 0)|| (x > 1 && rollX >0)){
+		if((x < -bounds && rollX < 0)|| (x > bounds && rollX >0)){
 			rollX = 0;
 		}
-		if((y < -1 && rollY < 0) || (y > 1 && rollY >0)){
+		if((y < -bounds && rollY < 0) || (y > bounds && rollY >0)){
 			rollY = 0;
 		}
 		x+= rollX;

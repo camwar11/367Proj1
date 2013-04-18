@@ -2,6 +2,7 @@ package edu.gvsu.cis.proj3;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.TextView;
 
 /* Class from Dr. Dulimarta's example code, slightly modified
  * this class is made as a Parcelable class so the object can be
@@ -22,6 +23,7 @@ public class TransformationParams implements Parcelable {
     public float eyeX, eyeY, eyeZ;
     public float droid_x, droid_y;
     public float[] coa = new float[3];
+    public TextView scoreText;
 
     @Override
 	public int describeContents() {
